@@ -1,12 +1,12 @@
 ---
 lab:
-  title: Desarrollo de un agente de Azure AI con el SDK de kernel semántico
+  title: Desarrollo de un agente de Azure AI con el SDK de Kernel semántico
   description: Aprende a usar el SDK de kernel semántico para crear y usar un agente del Agente de servicio de IA de Azure.
 ---
 
-# Desarrollo de un agente de Azure AI con el SDK de kernel semántico
+# Desarrollo de un agente de Azure AI con el SDK de Kernel semántico
 
-En este ejercicio, usarás Agente de servicio de IA de Azure y kernel semántico para crear un agente de IA que procese reclamaciones de gastos.
+En este ejercicio, usarás Agente de servicio de IA de Azure y kernel semántico para crear un agente de IA que cree un correo electrónico de reclamación de gastos.
 
 Este ejercicio debería tardar en completarse **30** minutos aproximadamente.
 
@@ -26,7 +26,7 @@ Comencemos creando un proyecto de Fundición de IA de Azure.
     - **Nombre del centro**: *un nombre válido para el centro*
     - **Suscripción**: *suscripción a Azure*
     - **Grupo de recursos**: *crea o selecciona un grupo de recursos*
-    - **Ubicación**: selecciona una región de entre las siguientes:\*
+    - **Ubicación**: selecciona cualquiera de las siguientes regiones:\*
         - estado
         - eastus2
         - swedencentral
@@ -35,7 +35,7 @@ Comencemos creando un proyecto de Fundición de IA de Azure.
     - **Conectar Servicios de Azure AI o Azure OpenAI**: *crea un nuevo recurso de servicios de IA*
     - **Conectar Búsqueda de Azure AI**: omite la conexión
 
-    > \* En el momento de escribir, estas regiones admiten el modelo gpt-4o para su uso en agentes. La disponibilidad del modelo está restringida por cuotas regionales. En caso de que se alcance un límite de cuota más adelante en el ejercicio, es posible que tengas que crear otro proyecto en otra región.
+    > \* En el momento de escribir este ejercicio, estas regiones admitían el modelo gpt-4o para usarlo en los agentes. La disponibilidad del modelo está restringida por cuotas regionales. En caso de que se alcance un límite de cuota más adelante en el ejercicio, es posible que tengas que crear otro proyecto en otra región.
 
 1. Selecciona **Siguiente** y revisa tu configuración. Luego, selecciona **Crear** y espera a que se complete el proceso.
 1. Cuando se cree el proyecto, cierra las sugerencias que se muestran y revisa la página del proyecto en el Portal de la Fundición de IA de Azure, que debe tener un aspecto similar a la siguiente imagen:
@@ -64,7 +64,7 @@ Ahora ya estás listo para implementar un modelo de lenguaje de IA generativa co
 
 ## Creación de una aplicación cliente del agente
 
-Ahora estás listo para crear una aplicación cliente que defina un agente y una función personalizada. Se te ha proporcionado el código en un repositorio de GitHub.
+Ahora estás listo para crear una aplicación cliente que defina un agente y una función personalizada. Parte del código se ha proporcionado en un repositorio de GitHub.
 
 ### Preparación del entorno
 
@@ -89,7 +89,7 @@ Ahora estás listo para crear una aplicación cliente que defina un agente y una
    git clone https://github.com/MicrosoftLearning/mslearn-ai-agents ai-agents
     ```
 
-    > **Sugerencia**: al escribir comandos en CloudShell, la salida puede ocupar una gran cantidad del búfer de pantalla y el cursor de la línea actual puede quedar oculto. Puedes despejar la pantalla al escribir el comando `cls` para que te resulte más fácil centrarte en cada tarea.
+    > **Sugerencia**: al escribir comandos en CloudShell, la salida puede ocupar una gran cantidad del búfer de pantalla y el cursor en la línea actual puede estar atenuado. Puedes despejar la pantalla al escribir el comando `cls` para que te resulte más fácil centrarte en cada tarea.
 
 1. Cuando se haya clonado el repositorio, escribe el siguiente comando para cambiar el directorio de trabajo a la carpeta que contiene los archivos de código y enumerarlos todos.
 
@@ -98,7 +98,7 @@ Ahora estás listo para crear una aplicación cliente que defina un agente y una
    ls -a -l
     ```
 
-    Los archivos proporcionados incluyen código de aplicación un archivo para las opciones de configuración y un archivo que contiene datos de gastos.
+    Los archivos proporcionados incluyen código de aplicación y un archivo para las opciones de configuración.
 
 ### Configuración de la aplicación
 
@@ -120,7 +120,7 @@ Ahora estás listo para crear una aplicación cliente que defina un agente y una
 
     El archivo se abre en un editor de código.
 
-1. En el archivo de código, reemplaza el marcador de posición **your_project_connection_string** por la cadena de conexión del proyecto (copiado de la página **Información general** del proyecto en el Portal de la Fundición de IA de Azure) y el marcador de posición **your_model_deployment** por el nombre que asignaste a tu implementación del modelo gpt-4o.
+1. En el archivo de código, reemplaza el marcador de posición **your_project_connection_string** por la cadena de conexión del proyecto (copiado de la página **Información general** del proyecto en el Portal de la Fundición de IA de Azure) y el marcador de posición **your_model_deployment** por el nombre que asignaste a tu implementación de modelo gpt-4o.
 1. Después de reemplazar los marcadores de posición, usa el comando **CTRL+S** para guardar los cambios y, a continuación, usa el comando **CTRL+Q** para cerrar el editor de código mientras mantienes abierta la línea de comandos de Cloud Shell.
 
 ### Escritura de código para una aplicación de agente
@@ -134,9 +134,9 @@ Ahora estás listo para crear una aplicación cliente que defina un agente y una
     ```
 
 1. Revisa el código de este archivo. Contiene:
-    - Algunas instrucciones**de importación** para agregar referencias a espacios de nombres usados habitualmente
-    - Una función *principal* que carga un archivo que contiene datos de gastos, pide instrucciones al usuario y después llama a...
-    - Una función **process_expenses_data** en la que se debe agregar el código para crear y usar tu agente
+    - Algunas instrucciones de **importación** para agregar referencias a espacios de nombres usados habitualmente
+    - Una función *principal* que define los datos de una notificación de gastos (en una aplicación real, esto probablemente se enviaría como un archivo) y, a continuación, llama a...
+    - Una función **create_expense_claim** en la que se debe agregar el código para crear y usar tu agente
     - Una clase **EmailPlugin** que incluye una función kernel denominada **send_email**; que usará tu agente para simular la funcionalidad usada para enviar un correo electrónico.
 
 1. En la parte superior del archivo, después de la instrucción **import** existente, busca el comentario **Agregar referencias**, y agrega el siguiente código para hacer referencia a los espacios de nombres en las bibliotecas que necesitarás para implementar tu agente:
@@ -167,7 +167,7 @@ Ahora estás listo para crear una aplicación cliente que defina un agente y una
            print(body, "\n")
     ```
 
-    > **Nota**: La función *simula* el envío de un correo electrónico mediante la impresión en la consola. En una aplicación real, usarías un servicio SMTP o similar para enviar realmente el correo electrónico.
+    > **Nota**: la función *simula* el envío de un correo electrónico mediante la impresión en la consola. En una aplicación real, usarías un servicio SMTP o similar para enviar realmente el correo electrónico.
 
 1. Realiza una copia de seguridad sobre el código de la nueva clase **EmailPlugin**, en la función **create_expense_claim**, busca el comentario **Obtener ajustes de configuración**, y agrega el siguiente código para cargar el archivo de configuración y crear un objeto **AzureAIAgentSettings** (que incluirá automáticamente los ajustes del agente de Azure AI de la configuración).
 
@@ -210,7 +210,7 @@ Ahora estás listo para crear una aplicación cliente que defina un agente y una
    )
     ```
 
-1. Busca el comentario **Creación de un agente de kernel semántico**, y agrega el siguiente código para crear un objeto de agente de kernel semántico para tu agente de Azure AI, e incluye una referencia al complemento **EmailPlugin**.
+1. Busca el comentario **Crear un agente de kernel semántico**, y agrega el siguiente código para crear un objeto de agente de kernel semántico para tu agente de Azure AI, e incluye una referencia al complemento **EmailPlugin**.
 
     (Asegúrate de mantener el nivel de sangría)
 
@@ -223,16 +223,16 @@ Ahora estás listo para crear una aplicación cliente que defina un agente y una
    )
     ```
 
-1. Busca el comentario **Usar el agente para procesar los datos de gastos**, y agrega el siguiente código para crear un subproceso en el que se ejecutará tu agente y después invocarlo con un mensaje de chat.
+1. Busca el comentario **Usar el agente para generar un correo electrónico de reclamación de gastos**, y agrega el siguiente código para crear un subproceso en el que se ejecutará tu agente y después invocarlo con un mensaje de chat.
 
     (Asegúrate de mantener el nivel de sangría):
 
     ```python
-   # Use the agent to process the expenses data
+   # Use the agent to generate an expense claim email
    thread: AzureAIAgentThread = AzureAIAgentThread(client=project_client)
    try:
         # Add the input prompt to a list of messages to be submitted
-        prompt_messages = [f"{prompt}: {expenses_data}"]
+        prompt_messages = [f"Create an expense claim for the following expenses: {expenses_data}"]
         # Invoke the agent for the specified thread with the messages
         response = await expenses_agent.get_response(thread_id=thread.id, messages=prompt_messages)
         # Display the response
@@ -246,12 +246,11 @@ Ahora estás listo para crear una aplicación cliente que defina un agente y una
         await project_client.agents.delete_agent(expenses_agent.id)
     ```
 
-1. Revisa que el código completado del agente, con los comentarios que te ayudarán a comprender lo que hace cada bloque de código y después guarda los cambios de código (**CTRL+S**).
-1. Mantén abierto el editor de código en caso de que necesites corregir cualquier error tipográfico en el código, pero cambia el tamaño de los paneles para que puedas ver más de la consola de la línea de comandos.
+1. Revisa el código completado del agente, con los comentarios que te ayudarán a comprender lo que hace cada bloque de código, y después guarda los cambios de código (**CTRL+S**).
 
-### Inicia sesión en Azure y ejecuta la aplicación
+### Inicie sesión en Azure y ejecuta la aplicación.
 
-1. En el panel de línea de comandos de Coud Shell, debajo del editor de código, escribe el siguiente comando para iniciar sesión en Azure.
+1. En el panel de línea de comandos de Cloud Shell, debajo del editor de código, escribe el siguiente comando para iniciar sesión en Azure.
 
     ```
     az login
@@ -259,9 +258,9 @@ Ahora estás listo para crear una aplicación cliente que defina un agente y una
 
     **<font color="red">Debes iniciar sesión en Azure, aunque la sesión de Cloud Shell ya esté autenticada.</font>**
 
-    > **Nota**: En la mayoría de los escenarios, será suficiente con usar *az login*. Sin embargo, si tienes suscripciones en varios inquilinos, es posible que tengas que especificar el inquilino mediante el parámetro *--tenant*. Consulta [Iniciar sesión en Azure de forma interactiva mediante la CLI de Azure](https://learn.microsoft.com/cli/azure/authenticate-azure-cli-interactively) para obtener más información.
+    > **Nota**: en la mayoría de los escenarios, el uso de *inicio de sesión de az* será suficiente. Sin embargo, si tienes suscripciones en varios inquilinos, es posible que tengas que especificar el inquilino mediante el parámetro *--tenant*. Consulta [Inicio de sesión en Azure de forma interactiva mediante la CLI de Azure](https://learn.microsoft.com/cli/azure/authenticate-azure-cli-interactively) para obtener más información.
     
-1. Cuando se te solicite, siga las instrucciones para abrir la página de inicio de sesión en una nueva pestaña y escribe el código de autenticación proporcionado y las credenciales de Azure. Después, completa el proceso de inicio de sesión en la línea de comandos y selecciona la suscripción que contiene tu centro de Fundición de IA de Azure si se te solicita.
+1. Cuando se te solicite, sigue las instrucciones para abrir la página de inicio de sesión en una nueva pestaña y escribe el código de autenticación proporcionado y las credenciales de Azure. A continuación, completa el proceso de inicio de sesión en la línea de comandos y selecciona la suscripción que contiene el centro de Fundición de IA de Azure si se te solicita.
 1. Después de iniciar sesión, escribe el siguiente comando para ejecutar la aplicación:
 
     ```
@@ -270,15 +269,9 @@ Ahora estás listo para crear una aplicación cliente que defina un agente y una
     
     La aplicación se ejecuta con las credenciales de la sesión de Azure autenticada para conectarse al proyecto y crear y ejecutar el agente.
 
-1. Cuando se te pregunte qué hacer con los datos de gastos, escribe el siguiente mensaje:
-
-    ```
-   Submit an expense claim
-    ```
-
-1. Una vez finalizada la aplicación, revisa la salida. El agente debe haber compuesto un correo electrónico para una notificación de gastos en función de los datos proporcionados.
-
     > **Sugerencia**: si se produce un error en la aplicación porque se supera el límite de velocidad. Espere unos segundos y vuelve a intentarlo. Si no hay cuota suficiente disponible en la suscripción, es posible que el modelo no pueda responder.
+
+1. Cuando la aplicación acabe, revisa el resultado. El agente debe haber compuesto un correo electrónico para una notificación de gastos basada en los datos proporcionados.
 
 ## Resumen
 

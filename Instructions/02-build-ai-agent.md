@@ -1,14 +1,12 @@
 ---
 lab:
-  title: Uso de una función personalizada en un agente de IA
-  description: Descubre cómo usar funciones para agregar funcionalidades personalizadas a los agentes.
+  title: Desarrollo de un agente de IA
+  description: Usa Agente de servicio de IA de Azure para desarrollar un agente que use herramientas integradas.
 ---
 
-# Uso de una función personalizada en un agente de IA
+# Desarrollo de un agente de IA
 
-En este ejercicio, explorarás la creación de un agente que puede usar funciones personalizadas como herramienta para completar tareas.
-
-Crearás un agente de soporte técnico sencillo que puede recopilar los detalles de un problema técnico y generar una incidencia de soporte técnico.
+En este ejercicio, usarás Agente de servicio de IA de Azure para crear un agente sencillo que analice datos y cree gráficos. El agente usa la herramienta de *intérprete de código* integrada para generar dinámicamente el código necesario para crear gráficos como imágenes y, después, guarda las imágenes del gráfico resultantes.
 
 Este ejercicio debería tardar en completarse **30** minutos aproximadamente.
 
@@ -64,9 +62,9 @@ Ahora ya estás listo para implementar un modelo de lenguaje de IA generativa co
 
 1. Espera a que la implementación se complete.
 
-## Desarrollo de un agente que usa herramientas de funciones
+## Creación de una aplicación cliente del agente
 
-Ahora que has creado el proyecto en Fundición de IA, vamos a desarrollar una aplicación que implemente un agente mediante herramientas de funciones personalizadas.
+Ahora estás listo para crear una aplicación cliente que use un agente. Parte del código se ha proporcionado en un repositorio de GitHub.
 
 ### Clonación del repositorio que contiene el código de la aplicación
 
@@ -96,11 +94,11 @@ Ahora que has creado el proyecto en Fundición de IA, vamos a desarrollar una ap
 1. Escribe el siguiente comando para cambiar el directorio de trabajo a la carpeta que contiene los archivos de código y enumerarlos todos.
 
     ```
-   cd ai-agents/Labfiles/03-ai-agent-functions/Python
+   cd ai-agents/Labfiles/02-build-ai-agent/Python
    ls -a -l
     ```
 
-    Los archivos proporcionados incluyen código de aplicación y un archivo para las opciones de configuración.
+    Los archivos proporcionados incluyen el código de aplicación, los valores de configuración y los datos.
 
 ### Configuración de la aplicación
 
@@ -111,8 +109,6 @@ Ahora que has creado el proyecto en Fundición de IA, vamos a desarrollar una ap
    ./labenv/bin/Activate.ps1
    pip install python-dotenv azure-identity azure-ai-projects
     ```
-
-    >**Nota:** puedes ignorar los mensajes de error o advertencia que se muestran durante la instalación de la biblioteca.
 
 1. Escribe el siguiente comando para editar el archivo de configuración que se ha proporcionado:
 
@@ -125,62 +121,27 @@ Ahora que has creado el proyecto en Fundición de IA, vamos a desarrollar una ap
 1. En el archivo de código, reemplaza el marcador de posición **your_project_connection_string** por la cadena de conexión del proyecto (copiado de la página **Información general** del proyecto en el Portal de la Fundición de IA de Azure) y el marcador de posición **your_model_deployment** por el nombre que asignaste a tu implementación de modelo gpt-4o.
 1. Después de reemplazar los marcadores de posición, usa el comando **CTRL+S** para guardar los cambios y, a continuación, usa el comando **CTRL+Q** para cerrar el editor de código mientras mantienes abierta la línea de comandos de Cloud Shell.
 
-### Definición de una función personalizada
+### Escritura de código para una aplicación de agente
 
-1. Escribe el siguiente comando para editar el archivo de código que se ha proporcionado para el código de función:
+> **Sugerencia**: al agregar código, asegúrate de mantener la sangría correcta. Usa los niveles de sangría de comentario como guía.
 
-    ```
-   code user_functions.py
-    ```
-
-1. Busca el comentario **Crear una función para enviar una incidencia de soporte técnico** y agrega el código siguiente, que generará un número de vale y guarda la incidencia de soporte técnico como un archivo de texto.
-
-    ```python
-   # Create a function to submit a support ticket
-   def submit_support_ticket(email_address: str, description: str) -> str:
-        script_dir = Path(__file__).parent  # Get the directory of the script
-        ticket_number = str(uuid.uuid4()).replace('-', '')[:6]
-        file_name = f"ticket-{ticket_number}.txt"
-        file_path = script_dir / file_name
-        text = f"Support ticket: {ticket_number}\nSubmitted by: {email_address}\nDescription:\n{description}"
-        file_path.write_text(text)
-    
-        message_json = json.dumps({"message": f"Support ticket {ticket_number} submitted. The ticket file is saved as {file_name}"})
-        return message_json
-    ```
-
-1. Busca el comentario **Definir un conjunto de funciones invocables** y agrega el código siguiente, que define estáticamente un conjunto de funciones invocables en este archivo de código (en este caso, solo hay una, pero en una solución real puedes tener varias funciones a las que puede llamar el agente):
-
-    ```python
-   # Define a set of callable functions
-   user_functions: Set[Callable[..., Any]] = {
-        submit_support_ticket
-    }
-    ```
-1. Guarde el archivo (*CTRL + S*).
-
-### Escritura de código para implementar un agente que pueda usar la función
-
-1. Escribe el siguiente comando para empezar a editar el código del agente.
+1. Escribe el siguiente comando para editar el archivo de código que se ha proporcionado:
 
     ```
-    code agent.py
+   code agent.py
     ```
 
-    > **Sugerencia**: al agregar código al archivo de código, asegúrate de mantener la sangría correcta.
-
-1. Revisa el código existente, que recupera los valores de configuración de la aplicación y configura un bucle en el que el usuario puede escribir indicaciones para el agente. El resto del archivo incluye comentarios en los que agregarás el código necesario para implementar el agente de soporte técnico.
-1. Busca el comentario **Agregar referencias** y agrega el código siguiente para importar las clases que necesitarás para crear un agente de Azure AI que use el código de función como herramienta:
+1. Revisa el código existente, que recupera los valores de configuración de aplicación y carga los datos de *data.txt* que se van a analizar. El resto del archivo incluye comentarios en los que agregarás el código necesario para implementar el agente de análisis de datos.
+1. Busca el comentario **Agregar referencias** y agrega el código siguiente para importar las clases que necesitará para crear un agente de Azure AI que use la herramienta de intérprete de código integrada:
 
     ```python
    # Add references
    from azure.identity import DefaultAzureCredential
    from azure.ai.projects import AIProjectClient
-   from azure.ai.projects.models import FunctionTool, ToolSet
-   from user_functions import user_functions
+   from azure.ai.projects.models import FilePurpose, CodeInterpreterTool
     ```
 
-1. Busca el comentario **Conectar el proyecto a Fundición de IA de Azure** y agrega el siguiente código para conectarte al proyecto de Azure AI mediante las credenciales de Azure actuales.
+1. Busca el comentario **Conectarse al proyecto de Fundición de IA de Azure** y agrega el código siguiente para conectarte al proyecto de Azure AI.
 
     > **Sugerencia**: ten cuidado de mantener el nivel de sangría correcto.
 
@@ -192,47 +153,58 @@ Ahora que has creado el proyecto en Fundición de IA, vamos a desarrollar una ap
              exclude_managed_identity_credential=True),
         conn_str=PROJECT_CONNECTION_STRING
    )
+   with project_client:
     ```
-    
-1. Busca la sección del comentario **Definir un agente que pueda usar las funciones personalizadas** y agrega el código siguiente para agregar el código de función como un conjunto de herramientas. A continuación, crea un agente que pueda usar el conjunto de herramientas y un hilo en el que ejecutar la sesión de chat.
+
+    El código se conecta al proyecto de la Fundición de IA de Azure mediante las credenciales actuales de Azure. La última instrucción *with project_client* inicia un bloque de código que define el ámbito del cliente, asegurándose de que se limpia cuando finaliza el código del bloque.
+
+1. Busca el comentario **Cargar el archivo de datos y crear un CodeInterpreterTool**, en el bloque *with project_client* y agrega el código siguiente para cargar el archivo de datos al proyecto y crear un CodeInterpreterTool que puede acceder a los datos en él:
 
     ```python
-   # Define an agent that can use the custom functions
-   with project_client:
+   # Upload the data file and create a CodeInterpreterTool
+   file = project_client.agents.upload_file_and_poll(
+        file_path=file_path, purpose=FilePurpose.AGENTS
+   )
+   print(f"Uploaded {file.filename}")
 
-        functions = FunctionTool(user_functions)
-        toolset = ToolSet()
-        toolset.add(functions)
-            
-        agent = project_client.agents.create_agent(
-            model=MODEL_DEPLOYMENT,
-            name="support-agent",
-            instructions="""You are a technical support agent.
-                            When a user has a technical issue, you get their email address and a description of the issue.
-                            Then you use those values to submit a support ticket using the function available to you.
-                            If a file is saved, tell the user the file name.
-                         """,
-            toolset=toolset
-        )
+   code_interpreter = CodeInterpreterTool(file_ids=[file.id])
+    ```
+    
+1. Busca el comentario **Definir un agente que use la CodeInterpreterTool** y agrega el código siguiente para definir un agente de IA que analice datos y pueda usar la herramienta de intérprete de código que definiste anteriormente:
 
-        thread = project_client.agents.create_thread()
-        print(f"You're chatting with: {agent.name} ({agent.id})")
-
+    ```python
+   # Define an agent that uses the CodeInterpreterTool
+   agent = project_client.agents.create_agent(
+        model=MODEL_DEPLOYMENT,
+        name="data-agent",
+        instructions="You are an AI agent that analyzes the data in the file that has been uploaded. If the user requests a chart, create it and save it as a .png file.",
+        tools=code_interpreter.definitions,
+        tool_resources=code_interpreter.resources,
+   )
+   print(f"Using agent: {agent.name}")
     ```
 
-1. Busca el comentario **Enviar una indicación al agente** y agrega el código siguiente para agregar la indicación del usuario como mensaje y ejecutar la conversación.
+1. Busca el comentario **Crear un hilo para la conversación** y agrega el código siguiente para iniciar un hilo en el que se ejecutará la sesión de chat con el agente:
+
+    ```python
+   # Create a thread for the conversation
+   thread = project_client.agents.create_thread()
+    ```
+    
+1. Ten en cuenta que la siguiente sección de código configura un bucle para que un usuario escriba una indicación y termine cuando el usuario escriba "salir".
+
+1. Busca el comentario **Enviar una indicación al agente** y agrega el código siguiente para agregar un mensaje de usuario a la indicación (junto con los datos del archivo que se cargó anteriormente) y, después, ejecuta el hilo con el agente.
 
     ```python
    # Send a prompt to the agent
    message = project_client.agents.create_message(
         thread_id=thread.id,
         role="user",
-        content=user_prompt
-   )
-   run = project_client.agents.create_and_process_run(thread_id=thread.id, agent_id=agent.id)
-    ```
+        content=user_prompt,
+    )
 
-    > **Nota**: el uso del método **create_and_process_run** para ejecutar el hilo permite al agente buscar automáticamente las funciones y elegir usarlas en función de sus nombres y parámetros. Como alternativa, puedes usar el método **create_run**, en cuyo caso serías responsable de escribir código para sondear el estado de ejecución con el fin de determinar cuándo se requiere una llamada a la función para llamarla y devolver los resultados al agente.
+    run = project_client.agents.create_and_process_run(thread_id=thread.id, agent_id=agent.id)
+     ```
 
 1. Busca el comentario **Comprobar el estado de ejecución de los errores** y agrega el código siguiente para mostrar los errores que se producen.
 
@@ -263,6 +235,15 @@ Ahora que has creado el proyecto en Fundición de IA, vamos a desarrollar una ap
         print(f"{message_data.role}: {last_message_content.text.value}\n")
     ```
 
+1. Busca el comentario **Obtener los archivos generados** y agrega el código siguiente para obtener las anotaciones de ruta de acceso de archivo de los mensajes (lo que indica que el agente guardó un archivo en su almacenamiento interno) y copia los archivos en la carpeta de la aplicación.
+
+    ```python
+   # Get any generated files
+   for file_path_annotation in messages.file_path_annotations:
+        project_client.agents.save_file(file_id=file_path_annotation.file_path.file_id, file_name=Path(file_path_annotation.text).name)
+        print(f"File saved as {Path(file_path_annotation.text).name}")
+    ```
+
 1. Busca el comentario **Limpiar** y agrega el código siguiente para eliminar el agente y el hilo cuando ya no sea necesario.
 
     ```python
@@ -272,12 +253,14 @@ Ahora que has creado el proyecto en Fundición de IA, vamos a desarrollar una ap
     ```
 
 1. Revisa el código mediante los comentarios para comprender cómo:
-    - Agrega el conjunto de funciones personalizadas a un conjunto de herramientas
-    - Crea un agente que usa el conjunto de herramientas.
-    - Ejecuta un hilo con un mensaje de indicación del usuario.
+    - Se conecta al proyecto de Fundición de IA.
+    - Carga el archivo de datos y crea una herramienta de intérprete de código que puede acceder a él.
+    - Crea un nuevo agente que usa la herramienta de intérprete de código y tiene instrucciones explícitas para analizar los datos y crear gráficos como archivos .png.
+    - Ejecuta un hilo con un mensaje de indicación del usuario junto con los datos que se van a analizar.
     - Comprueba el estado de la ejecución en caso de que se produzca un error.
     - Recupera los mensajes del hilo completado y muestra el último mensaje enviado por el agente.
     - Muestra el historial de conversaciones
+    - Guarda cada archivo que se generó.
     - Elimina el agente y el hilo cuando ya no son necesarios.
 
 1. Guarda el archivo de código (*CTRL+S*) cuando hayas terminado. También puede cerrar el editor de código (*CTRL+Q*); aunque es posible que desees mantenerlo abierto en caso de que tengas modificar el código que agregaste. En cualquier caso, no cierres el panel de línea de comandos de Cloud Shell.
@@ -298,35 +281,46 @@ Ahora que has creado el proyecto en Fundición de IA, vamos a desarrollar una ap
 1. Después de iniciar sesión, escribe el siguiente comando para ejecutar la aplicación:
 
     ```
-   python agent.py
+    python agent.py
     ```
     
     La aplicación se ejecuta con las credenciales de la sesión de Azure autenticada para conectarse al proyecto y crear y ejecutar el agente.
 
-1. Cuando se te solicite, escribe una indicación como:
+1. Cuando se te solicite, visualiza los datos que la aplicación ha cargado desde el archivo de texto *data.txt*. Después, escribe una indicación como:
 
     ```
-   I have a technical problem
+   What's the category with the highest cost?
     ```
 
     > **Sugerencia**: si se produce un error en la aplicación porque se supera el límite de velocidad. Espere unos segundos y vuelve a intentarlo. Si no hay cuota suficiente disponible en la suscripción, es posible que el modelo no pueda responder.
 
-1. Visualiza la respuesta. El agente puede pedir tu dirección de correo electrónico y una descripción del problema. Puede usar cualquier dirección de correo electrónico (por ejemplo, `alex@contoso.com`) y cualquier descripción del problema (como `my computer won't start`).
+1. Visualiza la respuesta. A continuación, escribe otra indicación, esta vez solicitando un gráfico:
 
-    Cuando tenga suficiente información, el agente debe elegir usar la función según sea necesario.
+    ```
+   Create a pie chart showing cost by category
+    ```
+
+    El agente debe usar selectivamente la herramienta de intérprete de código según sea necesario, en este caso para crear un gráfico basado en tu solicitud.
 
 1. Puedes continuar la conversación si lo deseas. El hilo está *con estado*, por lo que conserva el historial de conversaciones, lo que significa que el agente tiene el contexto completo para cada respuesta. Cuando hayas terminado, escribe `quit`.
-1. Revisa los mensajes de la conversación que se recuperaron del hilo y los vales que se generaron.
-1. La herramienta debe haber guardado incidencias de soporte técnico en la carpeta de la aplicación. Puedes usar el comando `ls` para comprobar y usar el comando `cat` para ver el contenido del archivo, de la siguiente manera:
+1. Revisa los mensajes de la conversación que se recuperaron del hilo y los archivos que se generaron.
+
+1. Una vez finalizada la aplicación, usa el comando **download** de Cloud Shell para descargar cada archivo .png que se guardó en la carpeta de la aplicación. Por ejemplo:
 
     ```
-   cat ticket-<ticket_num>.txt
+   download ./<file_name>.png
     ```
+
+    El comando download crea un vínculo emergente en la parte inferior derecha del explorador, que puedes seleccionar para descargar y abrir el archivo.
+
+## Resumen
+
+En este ejercicio, has usado el SDK de Agente de servicio de IA de Azure para crear una aplicación cliente que use un agente de IA. El agente usa la herramienta de intérprete de código integrada para ejecutar código dinámico que crea imágenes.
 
 ## Limpieza
 
-Ahora que has terminado el ejercicio, debes eliminar los recursos en la nube que has creado para evitar el uso innecesario de recursos.
+Si has terminado de explorar Agente de servicio de IA de Azure, debes eliminar los recursos que has creado en este ejercicio para evitar incurrir en costes innecesarios de Azure.
 
-1. Abre [Azure Portal](https://portal.azure.com) en `https://portal.azure.com` y visualiza el contenido del grupo de recursos donde implementaste los recursos del centro usados en este ejercicio.
+1. Vuelve a la pestaña del explorador que contiene Azure Portal (o vuelve a abrir [Azure Portal](https://portal.azure.com) en `https://portal.azure.com` en una nueva pestaña del explorador) y mira el contenido del grupo de recursos donde implementó los recursos usados en este ejercicio.
 1. Selecciona **Eliminar grupo de recursos** en la barra de herramientas.
 1. Escribe el nombre del grupo de recursos y confirma que deseas eliminarlo.
