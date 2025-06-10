@@ -12,7 +12,7 @@ Este ejercicio dura aproximadamente **30** minutos.
 
 > **Nota**: Algunas de las tecnologías que se usan en este ejercicio se encuentran en versión preliminar o en desarrollo activo. Puede que se produzcan algunos comportamientos, advertencias o errores inesperados.
 
-## Creación de un proyecto de Fundición de IA de Azure
+## Crear un proyecto y un agente de la Fundición de IA de Azure
 
 Comencemos creando un proyecto de Fundición de IA de Azure.
 
@@ -20,59 +20,32 @@ Comencemos creando un proyecto de Fundición de IA de Azure.
 
     ![Captura de pantalla del Portal de la Fundición de IA de Azure.](./Media/ai-foundry-home.png)
 
-1. En la página principal, selecciona **+Crear proyecto**.
-1. En el asistente para **crear un proyecto**, escribe un nombre válido y si se te sugiere un centro existente, elige la opción para crear uno nuevo. A continuación, revisa los recursos de Azure que se crearán automáticamente para admitir el centro y el proyecto.
-1. Selecciona **Personalizar** y especifica la siguiente configuración para el centro:
-    - **Nombre del centro**: *un nombre válido para el centro*
+1. En la página principal, selecciona **Crear un agente**.
+1. Cuando se te pida que crees un proyecto, escribe un nombre válido para tu proyecto.
+1. Expande **Opciones avanzadas** y especifica los siguientes valores:
+    - **Recurso de Fundición de IA de Azure**: *un nombre válido para el recurso de Fundición de IA de Azure*
     - **Suscripción**: *suscripción a Azure*
-    - **Grupo de recursos**: *crea o selecciona un grupo de recursos*
-    - **Ubicación**: selecciona cualquiera de las siguientes regiones:\*
-        - estado
-        - eastus2
-        - swedencentral
-        - westus
-        - westus3
-    - **Conectar Servicios de Azure AI o Azure OpenAI**: *crea un nuevo recurso de servicios de IA*
-    - **Conectar Búsqueda de Azure AI**: omite la conexión
+    - **Grupo de recursos**: *selecciona tu grupo de recursos o crea uno nuevo*
+    - **Región**: *selecciona cualquier ubicación compatible con los servicios de IA***\*
 
-    > \* En el momento de escribir este ejercicio, estas regiones admitían el modelo gpt-4o para usarlo en los agentes. La disponibilidad del modelo está restringida por cuotas regionales. En caso de que se alcance un límite de cuota más adelante en el ejercicio, es posible que tengas que crear otro proyecto en otra región.
+    > \* Algunos de los recursos de Azure AI están restringidos por cuotas de modelo regionales. En caso de que se alcance un límite de cuota más adelante en el ejercicio, es posible que tengas que crear otro recurso en otra región.
 
-1. Selecciona **Siguiente** y revisa tu configuración. Luego, selecciona **Crear** y espera a que se complete el proceso.
-1. Cuando se cree el proyecto, cierra las sugerencias que se muestran y revisa la página del proyecto en el Portal de la Fundición de IA de Azure, que debe tener un aspecto similar a la siguiente imagen:
+1. Selecciona **Crear** y espera a que tu proyecto se cree.
+1. Cuando se cree el proyecto, el área de juegos de agentes se abrirá automáticamente para que puedas seleccionar o implementar un modelo:
 
-    ![Captura de pantalla de los detalles de un proyecto de Azure AI en el Portal de la Fundición de IA de Azure.](./Media/ai-foundry-project.png)
+    ![Captura de pantalla del área de juegos de agentes en Fundición de IA de Azure.](./Media/ai-foundry-agents-playground.png)
 
-## Implementación de un modelo de IA generativa
+    >**Nota**: Un modelo base GPT-4o se implementa automáticamente al crear el agente y el proyecto.
 
-Ahora ya estás listo para implementar un modelo de lenguaje de IA generativa compatible con el agente.
+Verás que se ha creado un agente con un nombre predeterminado, junto con la implementación del modelo base.
 
-1. En el panel de la izquierda de tu proyecto, en la sección **Mis recursos**, selecciona la página **Modelos y puntos de conexión**.
-1. En la página **Modelos y puntos de conexión**, en la pestaña **Implementaciones de modelos**, en el menú **+ Implementar modelo**, selecciona **Implementar modelo base**.
-1. Busca el modelo **gpt-4o** en la lista, selecciona y confirma.
-1. Implementa el modelo con la siguiente configuración mediante la selección de **Personalizar** en los detalles de implementación:
-    - **Nombre de implementación**: *nombre válido para la implementación de modelo*
-    - **Tipo de implementación**: estándar global
-    - **Actualización automática de la versión**: habilitado
-    - **** Versión del modelo: *selecciona la versión disponible más reciente*
-    - **Recurso de IA conectado**: *selecciona tu conexión de recursos de Azure OpenAI*
-    - **Límite de velocidad de tokens por minuto (miles):** 50 000 *(o el máximo disponible en la suscripción si es inferior a 50 000)*
-    - **Filtro de contenido**: DefaultV2
-
-    > **Nota**: reducir el TPM ayuda a evitar el uso excesivo de la cuota disponible en la suscripción que está usando. 50 000 TPM deben ser suficientes para los datos que se usan en este ejercicio. Si la cuota disponible es inferior a esta, podrás completar el ejercicio, pero es posible que tengas que esperar y volver a enviar indicaciones si se supera el límite de velocidad.
-
-1. Espera a que la implementación se complete.
-
-## Creación de un agente
+## Creación del agente
 
 Ahora que has implementado un modelo, estás listo para crear un agente de IA. En este ejercicio, crearás un agente sencillo que responde a preguntas basadas en una directiva de gastos corporativos. Descargarás el documento de la directiva de gastos y lo usarás como datos de *fundamentación* para el agente.
 
 1. Abre otra pestaña del explorador y descarga el documento [Expenses_policy.docx](https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-agents/main/Labfiles/01-agent-fundamentals/Expenses_Policy.docx) de `https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-agents/main/Labfiles/01-agent-fundamentals/Expenses_Policy.docx` y guárdalo localmente. Este documento contiene detalles de la directiva de gastos de la empresa ficticia Contoso.
-1. Vuelve a la pestaña del explorador que contiene el Portal de la Fundición de IA de Azure y, en el panel de navegación de la izquierda, en la sección **Compilación y personalización**, seleccione la página **Agentes**.
-1. Si se te solicita, selecciona el recurso de Azure OpenAI Service y ve.
-
-    Se debería crear automáticamente el nuevo agente con un nombre como *Agent123* (si no es así, use el botón **+ Nuevo agente** para crear uno).
-
-1. Selecciona el nuevo agente. A continuación, en el panel **Configuración** del nuevo agente, establece el **Nombre del agente** en `ExpensesAgent`, asegúrate de que la implementación de modelo gpt-4o que creaste anteriormente está seleccionada y establece las **Instrucciones** en:
+1. Vuelve a la pestaña del explorador que contiene el área de juegos de los agentes de fundición y busca el panel **Configuración** (puede estar a un lado o debajo de la ventana de chat).
+1. Establece el **Nombre del agente** en `ExpensesAgent`, asegúrate de que la implementación del modelo gpt-4o que has creado anteriormente está seleccionada y establece las **instrucciones** en:
 
     ```prompt
    You are an AI assistant for corporate expenses.
@@ -84,23 +57,18 @@ Ahora que has implementado un modelo, estás listo para crear un agente de IA. E
 
 1. Más abajo, en el panel **Configuración**, junto al encabezado **Conocimientos**, selecciona **+ Agregar**. A continuación, en el cuadro de diálogo **Agregar conocimientos**, selecciona **Archivos**.
 1. En el cuadro de diálogo **Agregar archivos**, crea un nuevo almacén de vectores denominado `Expenses_Vector_Store`, cargando y guardando el archivo local **Expenses_policy.docx** que descargaste anteriormente.
-
-    ![Captura de pantalla del cuadro de diálogo Agregar datos en el Portal de la Fundición de IA de Azure.](./Media/ai-agent-add-files.png)
-
 1. En el panel **Configuración**, en la sección **Conocimientos**, comprueba que aparece **Expenses_Vector_Store** y que muestra que contiene 1 archivo.
-
 1. Debajo de la sección **Conocimientos**, junto a **Acciones**, selecciona **+ Agregar**. A continuación, en el cuadro de diálogo **Agregar acción**, selecciona **Intérprete de código** y, a continuación, selecciona **Guardar** (no es necesario cargar ningún archivo para el intérprete de código).
 
     El agente usará el documento que cargaste como origen de conocimiento para *fundamentar* sus respuestas (es decir, responderá a preguntas basadas en el contenido de este documento). Usará la herramienta de intérprete de código según sea necesario para realizar acciones mediante la generación y ejecución de su propio código de Python.
 
 ## Prueba del agente
 
-Ahora que has creado un agente, puedes probarlo en el área de juegos del Portal de la Fundición de IA de Azure.
+Ahora que has creado un agente, puedes probarlo en el chat del área de juegos.
 
-1. En la parte superior del panel **Configuración** del agente, selecciona **Probar en el área de juegos**.
-1. En el área de juegos, escribe la indicación: `What's the maximum I can claim for meals?` y revisa la respuesta del agente, que debe estar basada en la información del documento de la directiva de gastos que agregaste como conocimientos al configurar el agente.
+1. En la entrada del chat del área de juegos, escribe la indicación `What's the maximum I can claim for meals?` y revisa la respuesta del agente, que debería basarse en la información del documento de la directiva de gastos que has agregado como conocimiento al configurar el agente.
 
-    > **Nota**: si el agente no responde es porque se ha superado el límite de frecuencia. Espere unos segundos y vuelve a intentarlo. Si no hay cuota suficiente disponible en la suscripción, es posible que el modelo no pueda responder.
+    > **Nota**: si el agente no responde es porque se ha superado el límite de frecuencia. Espere unos segundos y vuelve a intentarlo. Si no hay cuota suficiente disponible en la suscripción, es posible que el modelo no pueda responder. Si el problema persiste, intenta aumentar la cuota de tu modelo en la página **Modelos + puntos de conexión**.
 
 1. Prueba la siguiente solicitud de seguimiento: `I'd like to submit a claim for a meal.` y revisa la respuesta. El agente debe pedirte la información necesaria para enviar una notificación.
 1. Proporciona al agente una dirección de correo electrónico; por ejemplo, `fred@contoso.com`. El agente debe confirmar la respuesta y solicitar la información restante necesaria para la notificación de gastos (descripción e importe).
