@@ -187,7 +187,11 @@ Ahora estás listo para crear una aplicación cliente que use un agente. Parte d
     )
 
    run = agent_client.runs.create_and_process(thread_id=thread.id, agent_id=agent.id)
-     
+    ```
+
+1. Busca el comentario **Comprobar el estado de ejecución de errores** y agrega el código siguiente para comprobar los errores que se producen.
+
+    ```python
    # Check the run status for failures
    if run.status == "failed":
         print(f"Run failed: {run.last_error}")
