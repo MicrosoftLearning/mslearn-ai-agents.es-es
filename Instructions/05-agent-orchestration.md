@@ -1,6 +1,6 @@
 ---
 lab:
-  title: Desarrollo de una solución de varios agentes
+  title: Desarrollo de una solución multiagente con kernel semántico
   description: Aprende a configurar varios agentes para colaborar mediante el SDK de kernel semántico
 ---
 
