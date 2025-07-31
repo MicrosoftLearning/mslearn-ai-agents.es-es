@@ -6,9 +6,9 @@ lab:
 
 # Uso de una función personalizada en un agente de IA
 
-En este ejercicio, explorarás la creación de un agente que puede usar funciones personalizadas como herramienta para completar tareas.
+En este ejercicio, explorarás la creación de un agente que puede usar funciones personalizadas como herramienta para completar tareas. Crearás un agente de soporte técnico sencillo que puede recopilar los detalles de un problema técnico y generar una incidencia de soporte técnico.
 
-Crearás un agente de soporte técnico sencillo que puede recopilar los detalles de un problema técnico y generar una incidencia de soporte técnico.
+> **Sugerencia**: El código usado en este ejercicio se basa en el SDK de Fundición de IA de Azure para Python. Puedes desarrollar soluciones similares mediante los SDK de Microsoft .NET, JavaScript y Java. Consulta las [bibliotecas cliente de SDK de la Fundición de IA de Azure](https://learn.microsoft.com/azure/ai-foundry/how-to/develop/sdk-overview) para más información.
 
 Este ejercicio debería tardar en completarse **30** minutos aproximadamente.
 
@@ -33,19 +33,17 @@ Comencemos creando un proyecto de Fundición de IA de Azure.
     > \* Algunos de los recursos de Azure AI están restringidos por cuotas de modelo regionales. En caso de que se alcance un límite de cuota más adelante en el ejercicio, es posible que tengas que crear otro recurso en otra región.
 
 1. Selecciona **Crear** y espera a que tu proyecto se cree.
-1. Cuando se cree el proyecto, el área de juegos de agentes se abrirá automáticamente para que puedas seleccionar o implementar un modelo:
+1. Si se te solicita, implementa un modelo **gpt-4o** mediante la opción de implementación *Estándar global* o *Estándar* (en función de la disponibilidad de la cuota).
 
-    ![Captura de pantalla del área de juegos de agentes en Fundición de IA de Azure.](./Media/ai-foundry-agents-playground.png)
+    >**Nota**: Si la cuota está disponible, se puede implementar automáticamente un modelo base GPT-4o al crear el agente y el proyecto.
 
-    >**Nota**: Un modelo base GPT-4o se implementa automáticamente al crear el agente y el proyecto.
+1. Cuando se crea el proyecto, se abre el sitio de prueba de agentes.
 
 1. En el panel de navegación de la izquierda, selecciona **Información general** para ver la página principal del proyecto; que tiene este aspecto:
 
-    > **Nota**: si se muestra un error de *permisos insuficientes**, usa el botón **Reparar** para resolverlo.
-
     ![Captura de pantalla de la página de información general de un proyecto de Fundición de IA de Azure.](./Media/ai-foundry-project.png)
 
-1. Copia el valor del **punto de conexión del proyecto de la Fundición de IA de Azure** en un Bloc de notas, ya que lo usarás para conectarte a tu proyecto en una aplicación cliente.
+1. Copia los valores del **punto de conexión del proyecto de Fundición de IA de Azure** en un Bloc de notas, ya que los usarás para conectarte a tu proyecto en una aplicación cliente.
 
 ## Desarrollo de un agente que usa herramientas de funciones
 
@@ -105,7 +103,7 @@ Ahora que has creado el proyecto en Fundición de IA, vamos a desarrollar una ap
 
     El archivo se abre en un editor de código.
 
-1. En el archivo de código, reemplaza el marcador de posición **your_project_endpoint** por el punto de conexión de tu proyecto (copiado de la página **Información general** del proyecto del portal de la Fundición de IA de Azure).
+1. En el archivo de código, reemplaza el marcador de posición **your_project_endpoint** con el punto de conexión del proyecto (copiado de la página **Información general** del proyecto en el portal de la Función de IA de Azure) y asegúrate de que la variable MODEL_DEPLOYMENT_NAME está configurada con el nombre de la implementación de tu modelo (debe ser *gpt-4o*).
 1. Después de reemplazar los marcadores de posición, usa el comando **CTRL+S** para guardar los cambios y después usa el comando **CTRL+Q** para cerrar el editor de código mientras mantienes abierta la línea de comandos de Cloud Shell.
 
 ### Definición de una función personalizada
@@ -245,7 +243,7 @@ Ahora que has creado el proyecto en Fundición de IA, vamos a desarrollar una ap
    print("\nConversation Log:\n")
    messages = agent_client.messages.list(thread_id=thread.id, order=ListSortOrder.ASCENDING)
    for message in messages:
-       if message.text_messages:
+        if message.text_messages:
            last_msg = message.text_messages[-1]
            print(f"{message.role}: {last_msg.text.value}\n")
     ```

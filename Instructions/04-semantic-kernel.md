@@ -8,6 +8,8 @@ lab:
 
 En este ejercicio, usarás Agente de servicio de IA de Azure y kernel semántico para crear un agente de IA que procese reclamaciones de gastos.
 
+> **Sugerencia**: El código usado en este ejercicio se basa en el SDK de kernel semántico para Python. Puedes desarrollar soluciones similares mediante los SDK para Microsoft .NET y Java. Consulta [Lenguajes semánticos de kernel admitidos](https://learn.microsoft.com/semantic-kernel/get-started/supported-languages) para obtener más información.
+
 Este ejercicio debería tardar en completarse **30** minutos aproximadamente.
 
 > **Nota**: algunas de las tecnologías que se usan en este ejercicio se encuentran en versión preliminar o en desarrollo activo. Puede que se produzcan algunos comportamientos, advertencias o errores inesperados.
@@ -35,8 +37,6 @@ Comencemos con la implementación de un modelo en un proyecto de Fundición de I
 1. Cuando se cree el proyecto, el área de juegos de chat se abrirá automáticamente.
 1. En el panel **Configuración**, anota el nombre de la implementación del modelo; que debe ser **gpt-4o**. Para confirmarlo, mira la implementación en la página **Modelos y puntos de conexión** (simplemente abre esa página en el panel de navegación de la izquierda).
 1. En el panel de navegación de la izquierda, selecciona **Información general** para ver la página principal del proyecto; que tiene este aspecto:
-
-    > **Nota**: si se muestra un error de *permisos insuficientes**, usa el botón **Reparar** para resolverlo.
 
     ![Captura de pantalla de los detalles de un proyecto de Azure AI en el Portal de la Fundición de IA de Azure.](./Media/ai-foundry-project.png)
 
@@ -85,10 +85,10 @@ Ahora estás listo para crear una aplicación cliente que defina un agente y una
     ```
    python -m venv labenv
    ./labenv/bin/Activate.ps1
-   pip install python-dotenv azure-identity semantic-kernel[azure] 
+   pip install python-dotenv azure-identity semantic-kernel --upgrade 
     ```
 
-    > **Nota**: al instalar *semantic-kernel[azure]* se instala automáticamente una versión de *azure-ai-projects* compatible con kernel semántico.
+    > **Nota**: Con la instalación del *kernel semántico*, se instala automáticamente una versión compatible con el kernel semántico de *azure-ai-projects*.
 
 1. Escribe el siguiente comando para editar el archivo de configuración que se ha proporcionado:
 
@@ -207,12 +207,14 @@ Ahora estás listo para crear una aplicación cliente que defina un agente y una
 
     ```python
    # Use the agent to process the expenses data
-   thread: AzureAIAgentThread = AzureAIAgentThread(client=project_client)
+   # If no thread is provided, a new thread will be
+   # created and returned with the initial response
+   thread: AzureAIAgentThread | None = None
    try:
         # Add the input prompt to a list of messages to be submitted
         prompt_messages = [f"{prompt}: {expenses_data}"]
         # Invoke the agent for the specified thread with the messages
-        response = await expenses_agent.get_response(thread_id=thread.id, messages=prompt_messages)
+        response = await expenses_agent.get_response(prompt_messages, thread=thread)
         # Display the response
         print(f"\n# {response.name}:\n{response}")
    except Exception as e:
