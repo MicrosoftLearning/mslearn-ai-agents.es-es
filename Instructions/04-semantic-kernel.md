@@ -29,7 +29,7 @@ Comencemos con la implementación de un modelo en un proyecto de Fundición de I
     - **Recurso de Fundición de IA de Azure**: *un nombre válido para el recurso de Fundición de IA de Azure*
     - **Suscripción**: *suscripción a Azure*
     - **Grupo de recursos**: *crea o selecciona un grupo de recursos*
-    - **Región**: *selecciona cualquier ubicación compatible con los servicios de IA***\*
+    - **Región**: *seleccione cualquiera (se recomienda Fundición de IA\*).
 
     > \* Algunos de los recursos de Azure AI están restringidos por cuotas de modelo regionales. En caso de que se alcance un límite de cuota más adelante en el ejercicio, es posible que tengas que crear otro recurso en otra región.
 
@@ -147,7 +147,7 @@ Ahora estás listo para crear una aplicación cliente que defina un agente y una
 
     > **Nota**: la función *simula* el envío de un correo electrónico mediante la impresión en la consola. En una aplicación real, usarías un servicio SMTP o similar para enviar realmente el correo electrónico.
 
-1. Realiza una copia de seguridad sobre el código de la nueva clase **EmailPlugin**, en la función **create_expense_claim**, busca el comentario **Obtener ajustes de configuración**, y agrega el siguiente código para cargar el archivo de configuración y crear un objeto **AzureAIAgentSettings** (que incluirá automáticamente los ajustes del agente de Azure AI de la configuración).
+1. Realice una copia de seguridad encima del nuevo código de clase **EmailPlugin**, en la función **process_expenses_data**, busque el comentario **Obtener opciones de configuración** y agregue el código siguiente para cargar el archivo de configuración y crear un objeto **AzureAIAgentSettings** (que incluirá automáticamente las opciones del agente de Azure AI de la configuración).
 
     (Asegúrate de mantener el nivel de sangría)
 
