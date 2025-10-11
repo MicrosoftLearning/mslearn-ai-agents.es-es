@@ -28,7 +28,13 @@ Comencemos creando un proyecto de Fundición de IA de Azure.
     - **Recurso de Fundición de IA de Azure**: *un nombre válido para el recurso de Fundición de IA de Azure*
     - **Suscripción**: *suscripción a Azure*
     - **Grupo de recursos**: *crea o selecciona un grupo de recursos*
-    - **Región**: *selecciona cualquier ubicación compatible con los servicios de IA***\*
+    - **Región**: *Seleccione cualquiera de las siguientes ubicaciones admitidas:* \*
+      * Oeste de EE. UU. 2
+      * Oeste de EE. UU.
+      * Este de Noruega
+      * Norte de Suiza
+      * Norte de Emiratos Árabes Unidos
+      * Sur de la India
 
     > \* Algunos de los recursos de Azure AI están restringidos por cuotas de modelo regionales. En caso de que se alcance un límite de cuota más adelante en el ejercicio, es posible que tengas que crear otro recurso en otra región.
 
@@ -43,7 +49,7 @@ Comencemos creando un proyecto de Fundición de IA de Azure.
 
     ![Captura de pantalla de la página de información general de un proyecto de Fundición de IA de Azure.](./Media/ai-foundry-project.png)
 
-1. Copia el valor del **punto de conexión del proyecto de la Fundición de IA de Azure** en un Bloc de notas, ya que lo usarás para conectarte a tu proyecto en una aplicación cliente.
+1. Copie el valor del **punto de conexión del proyecto de Fundición de IA de Azure**. Lo usará para conectarse al proyecto en una aplicación cliente.
 
 ## Desarrollo de un agente que usa herramientas de funciones de MCP
 
@@ -109,13 +115,21 @@ Ahora que has creado el proyecto en Fundición de IA, vamos a desarrollar una ap
 
 En esta tarea, se conectará a un servidor MCP remoto, preparará el agente de IA y ejecutará un mensaje de usuario.
 
+1. Escribe el siguiente comando para editar el archivo de código que se ha proporcionado:
+
+    ```
+   code client.py
+    ```
+
+    El archivo se abre en el editor de código.
+
 1. Busca el comentario **Agregar referencias** y agrega el código siguiente para importar las clases:
 
     ```python
    # Add references
    from azure.identity import DefaultAzureCredential
    from azure.ai.agents import AgentsClient
-   from azure.ai.agents.models import McpTool
+   from azure.ai.agents.models import McpTool, ToolSet, ListSortOrder
     ```
 
 1. Busca el comentario **Conectar con el cliente de los agentes** y agrega el código siguiente para conectarte al proyecto de Azure AI mediante las credenciales actuales de Azure.
@@ -136,25 +150,29 @@ En esta tarea, se conectará a un servidor MCP remoto, preparará el agente de I
     ```python
    # Initialize agent MCP tool
    mcp_tool = McpTool(
-       server_label=mcp_server_label,
-       server_url=mcp_server_url,
+        server_label=mcp_server_label,
+        server_url=mcp_server_url,
    )
+    
+   mcp_tool.set_approval_mode("never")
+    
+   toolset = ToolSet()
+   toolset.add(mcp_tool)
     ```
 
     Este código se conectará al servidor MCP remoto de Microsft Learn Docs. Se trata de un servicio hospedado en la nube que permite a los clientes acceder a información de confianza y actualizada directamente desde la documentación oficial de Microsoft.
 
-1. En el comentario **Crear un agente con las definiciones de la herramienta MCP**, agregue el código siguiente:
+1. En el comentario **Crear un nuevo agente**, agregue el código siguiente:
 
     ```python
-   # Create a new agent with the mcp tool definitions
+   # Create a new agent
    agent = agents_client.create_agent(
-       model=model_deployment,
-       name="my-mcp-agent",
-       instructions="""
+        model=model_deployment,
+        name="my-mcp-agent",
+        instructions="""
         You have access to an MCP server called `microsoft.docs.mcp` - this tool allows you to 
         search through Microsoft's latest official documentation. Use the available MCP tools 
-        to answer questions and perform tasks.""",
-       tools=mcp_tool.definitions,
+        to answer questions and perform tasks."""
    )
     ```
 
@@ -172,33 +190,20 @@ En esta tarea, se conectará a un servidor MCP remoto, preparará el agente de I
 
     ```python
    # Create a message on the thread
+   prompt = input("\nHow can I help?: ")
    message = agents_client.messages.create(
-       thread_id=thread.id,
-       role="user",
-       content="Give me the Azure CLI commands to create an Azure Container App with a managed identity.",
+        thread_id=thread.id,
+        role="user",
+        content=prompt,
    )
    print(f"Created message, ID: {message.id}")
     ```
 
-1. En el comentario **Actualizar encabezados de la herramienta mcp**, agregue el código siguiente:
-
-    ```python
-   # Update mcp tool headers
-   mcp_tool.update_headers("SuperSecret", "123456")
-    ```
-
-1. Busque el comentario **Establecer modo de aprobación** y agregue el código siguiente:
-
-    ```python
-   # Set approval mode
-   mcp_tool.set_approval_mode("never")
-    ```
-
-1. Busque el comentario **Crear y procesar ejecución del agente en la conversación con herramientas de MCP** y agregue el código siguiente:
+1. Busque el comentario **Crear y procesar la ejecución del agente en el subproceso con herramientas de MCP** y agregue el código siguiente:
 
     ```python
    # Create and process agent run in thread with MCP tools
-   run = agents_client.runs.create_and_process(thread_id=thread.id, agent_id=agent.id, tool_resources=mcp_tool.resources)
+   run = agents_client.runs.create_and_process(thread_id=thread.id, agent_id=agent.id, toolset=toolset)
    print(f"Created run, ID: {run.id}")
     ```
     
@@ -226,7 +231,13 @@ En esta tarea, se conectará a un servidor MCP remoto, preparará el agente de I
    python client.py
     ```
 
-    Deberías ver un resultado parecido al siguiente:
+1. Cuando se le solicite, escriba una solicitud de información técnica como:
+
+    ```
+    Give me the Azure CLI commands to create an Azure Container App with a managed identity.
+    ```
+
+1. Espere a que el agente procese la indicación, usando el servidor MCP para encontrar una herramienta adecuada para recuperar la información solicitada. Deberías ver un resultado parecido a los siguiente:
 
     ```
     Created agent, ID: <<agent-id>>
@@ -251,25 +262,28 @@ En esta tarea, se conectará a un servidor MCP remoto, preparará el agente de I
     ---
 
     ### **1. Create a Resource Group**
-    ```azurecli
+    '''azurecli
     az group create --name myResourceGroup --location eastus
+    '''
+    
+
+    {{continued...}}
+
+    By following these steps, you can deploy an Azure Container App with either system-assigned or user-assigned managed identities to integrate seamlessly with other Azure services.
+    --------------------------------------------------
+    USER: Give me the Azure CLI commands to create an Azure Container App with a managed identity.
+    --------------------------------------------------
+    Deleted agent
     ```
 
-    {{continuación...}}
+    Observe que el agente ha podido invocar automáticamente la herramienta de MCP `microsoft_docs_search` para cumplir la solicitud.
 
-    Con estos pasos puede implementar una aplicación de contenedor de Azure con identidades administradas asignadas por el sistema o asignadas por el usuario para integrarse sin problemas con otros servicios de Azure.
-    --------------------------------------------------
-    USUARIO: Dame los comandos de la CLI de Azure para crear una aplicación de contenedor de Azure con una identidad administrada.
-    --------------------------------------------------
-    Agente eliminado
-    ```
+1. Puede volver a ejecutar la aplicación (con el comando `python client.py`) para solicitar información diferente. En cada caso, el agente intentará encontrar documentación técnica mediante la herramienta de MCP.
 
-    Notice that the agent was able to invoke the MCP tool `microsoft_docs_search` automatically to fulfill the request.
+## Limpieza
 
-## Clean up
+Ahora que has terminado el ejercicio, debes eliminar los recursos en la nube que has creado para evitar el uso innecesario de recursos.
 
-Now that you've finished the exercise, you should delete the cloud resources you've created to avoid unnecessary resource usage.
-
-1. Open the [Azure portal](https://portal.azure.com) at `https://portal.azure.com` and view the contents of the resource group where you deployed the hub resources used in this exercise.
-1. On the toolbar, select **Delete resource group**.
-1. Enter the resource group name and confirm that you want to delete it.
+1. Abre [Azure Portal](https://portal.azure.com) en `https://portal.azure.com` y visualiza el contenido del grupo de recursos donde implementaste los recursos del centro usados en este ejercicio.
+1. Selecciona **Eliminar grupo de recursos** en la barra de herramientas.
+1. Escribe el nombre del grupo de recursos y confirma que deseas eliminarlo.

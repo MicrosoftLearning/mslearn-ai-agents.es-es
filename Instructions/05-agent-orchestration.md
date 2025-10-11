@@ -1,16 +1,18 @@
 ---
 lab:
-  title: Desarrollo de una solución multiagente con kernel semántico
-  description: Aprende a configurar varios agentes para colaborar mediante el SDK de kernel semántico
+  title: Desarrollo de una solución multiagente con Microsoft Agent Framework
+  description: Aprenda a configurar varios agentes para que colaboren con el SDK de Microsoft Agent Framework.
 ---
 
 # Desarrollo de una solución de varios agentes
 
-En este ejercicio, crearás un proyecto que organiza dos agentes de IA mediante el SDK de kernel semántico. Un agente del *Administrador de incidentes* analizará los archivos de registro del servicio en busca de problemas. Si se encuentra un problema, el Administrador de incidentes recomendará una acción de resolución y un agente de *DevOps Assistant* recibirá la recomendación e invocará la función correctiva y realizará la resolución. Después, el agente del Administrador de incidentes revisará los registros actualizados para asegurarse de que la resolución se ha realizado correctamente.
+En este ejercicio, practicará el uso del patrón de orquestación secuencial en el SDK de Microsoft Agent Framework. Creará una canalización sencilla de tres agentes que funcionan conjuntamente para procesar los comentarios de los clientes y sugerir los pasos siguientes. Creará los siguientes agentes:
 
-En este ejercicio se proporcionan cuatro archivos de registro de ejemplo. El código del agente de DevOps Assistant solo actualiza los archivos de registro de ejemplo con algunos mensajes de registro de ejemplo.
+- El agente generador de resumen condensará los comentarios sin procesar en una oración breve y neutral.
+- El agente clasificador clasificará los comentarios como positivo, negativo o una solicitud de característica.
+- Por último, el agente de acción recomendada recomendará un paso de seguimiento adecuado.
 
-> **Sugerencia**: El código usado en este ejercicio se basa en el SDK de kernel semántico para Python. Puedes desarrollar soluciones similares mediante los SDK para Microsoft .NET y Java. Consulta [Lenguajes semánticos de kernel admitidos](https://learn.microsoft.com/semantic-kernel/get-started/supported-languages) para obtener más información.
+Aprenderá a usar el SDK de Microsoft Agent Framework para analizar un problema, enrutarlo a través de los agentes adecuados y generar resultados accionables. Comencemos.
 
 Este ejercicio debería tardar en completarse **30** minutos aproximadamente.
 
@@ -31,20 +33,15 @@ Comencemos con la implementación de un modelo en un proyecto de Fundición de I
     - **Recurso de Fundición de IA de Azure**: *un nombre válido para el recurso de Fundición de IA de Azure*
     - **Suscripción**: *suscripción a Azure*
     - **Grupo de recursos**: *crea o selecciona un grupo de recursos*
-    - **Región**: *selecciona cualquier ubicación compatible con los servicios de IA***\*
+    - **Región**: *seleccione cualquiera (se recomienda Fundición de IA\*).
 
     > \* Algunos de los recursos de Azure AI están restringidos por cuotas de modelo regionales. En caso de que se alcance un límite de cuota más adelante en el ejercicio, es posible que tengas que crear otro recurso en otra región.
 
 1. Selecciona **Crear** y espera a que se cree el proyecto, incluida la implementación del modelo gpt-4 que seleccionaste.
+
 1. Cuando se cree el proyecto, el área de juegos de chat se abrirá automáticamente.
 
-    > **Nota**: La configuración predeterminada de TPM para este modelo puede ser demasiado baja para este ejercicio. Un TPM más bajo ayuda a evitar el uso excesivo de la cuota disponible en la suscripción que estás usando. 
-
 1. En el panel de navegación de la izquierda, selecciona **Modelos y puntos de conexión** y selecciona tu implementación **gpt-4o**.
-
-1. Selecciona **Editar** y después aumenta el **Límite de velocidad de tokens por minuto**.
-
-   > **NOTA**: 40 000 TPM es suficiente para los datos que se usan en este ejercicio. Si la cuota disponible es inferior a esta, podrás completar el ejercicio, pero es posible que tengas que esperar y volver a enviar indicaciones si se supera el límite de velocidad.
 
 1. En el panel **Configuración**, anota el nombre de la implementación del modelo; que debe ser **gpt-4o**. Para confirmarlo, mira la implementación en la página **Modelos y puntos de conexión** (simplemente abre esa página en el panel de navegación de la izquierda).
 1. En el panel de navegación de la izquierda, selecciona **Información general** para ver la página principal del proyecto; que tiene este aspecto:
@@ -96,10 +93,8 @@ Ahora estás listo para crear una aplicación cliente que defina un agente y una
     ```
    python -m venv labenv
    ./labenv/bin/Activate.ps1
-   pip install python-dotenv azure-identity semantic-kernel --upgrade
+   pip install azure-identity agent-framework
     ```
-
-    > **Nota**: Con la instalación del *kernel semántico*, se instala automáticamente una versión compatible con el kernel semántico de *azure-ai-projects*.
 
 1. Escribe el siguiente comando para editar el archivo de configuración que se ha proporcionado:
 
@@ -109,7 +104,7 @@ Ahora estás listo para crear una aplicación cliente que defina un agente y una
 
     El archivo se abre en un editor de código.
 
-1. En el archivo de código, reemplaza el marcador de posición **your_project_endpoint** con el punto de conexión de tu proyecto (copiado de la página **Información general** del proyecto en el portal de la Fundición de IA de Azure), y el marcador de posición **your_model_deployment** con el nombre que has asignado a la implementación de tu modelo gpt-4o.
+1. En el archivo de código, reemplace el marcador de posición **your_openai_endpoint** por el punto de conexión del proyecto (copiado de la página **Información general** del proyecto en el Portal de la Fundición de IA de Azure). Reemplace el marcador de posición **your_model_deployment** por el nombre que asignó a la implementación del modelo gpt-4o.
 
 1. Después de reemplazar los marcadores de posición, usa el comando **CTRL+S** para guardar los cambios y, a continuación, usa el comando **CTRL+Q** para cerrar el editor de código mientras mantienes abierta la línea de comandos de Cloud Shell.
 
@@ -117,158 +112,104 @@ Ahora estás listo para crear una aplicación cliente que defina un agente y una
 
 Ahora ya estás listo para crear los agentes para la solución de varios agentes. Comencemos.
 
-1. Escribe el siguiente comando para editar el archivo **agent_chat.py**:
+1. Escriba el siguiente comando para editar el archivo **agents.py**:
 
     ```
-   code agent_chat.py
+   code agents.py
     ```
 
-1. Revisa el código del archivo; ten en cuenta que contiene:
-    - Constantes que definen los nombres e instrucciones de los dos agentes.
-    - Una función **main** en la que se agregará la mayor parte del código para implementar la solución de varios agentes.
-    - Una clase **SelectionStrategy**, que usarás para implementar la lógica necesaria para determinar qué agente se debe seleccionar para cada turno de la conversación.
-    - Una clase **ApprovalTerminationStrategy**, que usarás para implementar la lógica necesaria para determinar cuándo finaliza la conversación.
-    - Una clase **DevopsPlugin** que contiene funciones para realizar operaciones de DevOps.
-    - Una clase **LogFilePlugin** que contiene funciones para leer y escribir archivos de registro.
-
-    En primer lugar, crearás el agente del *Administrador de incidentes*, que analizará los archivos de registro del servicio, identificará posibles pro
-blemas y recomendará acciones de resolución o escalará los problemas cuando sea necesario.
-
-1. Anota la cadena **INCIDENT_MANAGER_INSTRUCTIONS**. Estas son las instrucciones para tu agente.
-
-1. En la función **main**, busca el comentario **Crear el agente del administrador de incidentes en el Agente de servicio de IA de Azure** y agrega el código siguiente para crear un agente de Azure AI.
+1. En la parte superior del archivo en el comentario **Agregar referencias**, agregue el código siguiente para hacer referencia a los espacios de nombres de las bibliotecas que necesitará para implementar el agente:
 
     ```python
-   # Create the incident manager agent on the Azure AI agent service
-   incident_agent_definition = await client.agents.create_agent(
-        model=ai_agent_settings.model_deployment_name,
-        name=INCIDENT_MANAGER,
-        instructions=INCIDENT_MANAGER_INSTRUCTIONS
+   # Add references
+   import asyncio
+   from typing import cast
+   from agent_framework import ChatMessage, Role, SequentialBuilder, WorkflowOutputEvent
+   from agent_framework.azure import AzureAIAgentClient
+   from azure.identity import AzureCliCredential
+    ```
+
+1. En la función **main**, dedique un momento a revisar las instrucciones del agente. Estas instrucciones definen el comportamiento de cada agente en la orquestación.
+
+1. Agregue el código siguiente en el comentario **Crear el cliente de chat**:
+
+    ```python
+   # Create the chat client
+   credential = AzureCliCredential()
+   async with (
+       AzureAIAgentClient(async_credential=credential) as chat_client,
+   ):
+    ```
+
+1. Agregue el código siguiente en el comentario **Crear agentes**:
+
+    (Asegúrate de mantener el nivel de sangría)
+
+    ```python
+   # Create agents
+   summarizer = chat_client.create_agent(
+       instructions=summarizer_instructions,
+       name="summarizer",
+   )
+
+   classifier = chat_client.create_agent(
+       instructions=classifier_instructions,
+       name="classifier",
+   )
+
+   action = chat_client.create_agent(
+       instructions=action_instructions,
+       name="action",
    )
     ```
 
-    Este código crea la definición del agente en el cliente del proyecto de Azure AI.
+## Creación de una orquestación secuencial
 
-1. Busca el comentario **Crear un agente de kernel semántico para el agente del administrador de incidentes de Azure AI** y agrega el código siguiente para crear un agente de kernel semántico basado en la definición del agente de Azure AI.
-
-    ```python
-   # Create a Semantic Kernel agent for the Azure AI incident manager agent
-   agent_incident = AzureAIAgent(
-        client=client,
-        definition=incident_agent_definition,
-        plugins=[LogFilePlugin()]
-   )
-    ```
-
-    Este código crea el agente de kernel semántico con acceso a **LogFilePlugin**. Este complemento permite al agente leer el contenido del archivo de registro.
-
-    Ahora vamos a crear el segundo agente, que responderá a los problemas y realizará operaciones de DevOps para resolverlos.
-
-1. En la parte superior del archivo de código, dedica un momento a observar la cadena **DEVOPS_ASSISTANT_INSTRUCTIONS**. Estas son las instrucciones que proporcionarás al nuevo agente del asistente de DevOps.
-
-1. Busca el comentario **Create the devops agent on the Azure AI agent service** y añade el código siguiente para crear una definición del agente de Azure AI:
+1. En la función **main**, busque el comentario **Inicializar los comentarios actuales** y agregue el código siguiente:
     
-    ```python
-   # Create the devops agent on the Azure AI agent service
-   devops_agent_definition = await client.agents.create_agent(
-        model=ai_agent_settings.model_deployment_name,
-        name=DEVOPS_ASSISTANT,
-        instructions=DEVOPS_ASSISTANT_INSTRUCTIONS,
-   )
-    ```
-
-1. Busca el comentario **Create a Semantic Kernel agent for the devops Azure AI agent** y añade el código siguiente para crear un agente de kernel semántico basado en la definición del agente de Azure AI.
-    
-    ```python
-   # Create a Semantic Kernel agent for the devops Azure AI agent
-   agent_devops = AzureAIAgent(
-        client=client,
-        definition=devops_agent_definition,
-        plugins=[DevopsPlugin()]
-   )
-    ```
-
-    El complemento **DevopsPlugin** permite al agente simular tareas de DevOps, como reiniciar el servicio o revertir una transacción.
-
-### Definición de estrategias de chat grupal
-
-Ahora debes proporcionar la lógica utilizada para determinar qué agente se debe seleccionar para tomar el siguiente turno en una conversación y cuándo se debe finalizar la conversación.
-
-Comencemos con **SelectionStrategy**, que identifica qué agente debe tomar el siguiente turno.
-
-1. En la clase **SelectionStrategy** (debajo de la función **main**), busca el comentario **Select the next agent that should take the next turn in the chat** y añade el código siguiente para definir una función de selección:
+    (Asegúrate de mantener el nivel de sangría)
 
     ```python
-   # Select the next agent that should take the next turn in the chat
-   async def select_agent(self, agents, history):
-        """"Check which agent should take the next turn in the chat."""
-
-        # The Incident Manager should go after the User or the Devops Assistant
-        if (history[-1].name == DEVOPS_ASSISTANT or history[-1].role == AuthorRole.USER):
-            agent_name = INCIDENT_MANAGER
-            return next((agent for agent in agents if agent.name == agent_name), None)
-        
-        # Otherwise it is the Devops Assistant's turn
-        return next((agent for agent in agents if agent.name == DEVOPS_ASSISTANT), None)
+   # Initialize the current feedback
+   feedback="""
+   I use the dashboard every day to monitor metrics, and it works well overall. 
+   But when I'm working late at night, the bright screen is really harsh on my eyes. 
+   If you added a dark mode option, it would make the experience much more comfortable.
+   """
     ```
 
-    Este código se ejecuta en cada turno para determinar qué agente debe responder, comprobando el historial de chats para ver quién respondió por última vez.
-
-    Ahora vamos a implementar la clase **ApprovalTerminationStrategy** para ayudar a indicar cuándo se completa el objetivo y se puede finalizar la conversación.
-
-1. En la clase **ApprovalTerminationStrategy**, busca el comentario **End the chat if the agent has indicated there is no action needed** y añade el código siguiente para definir la función de terminación:
+1. En el comentario **Crear una orquestación secuencial**, agregue el código siguiente para definir una orquestación secuencial con los agentes definidos:
 
     ```python
-   # End the chat if the agent has indicated there is no action needed
-   async def should_agent_terminate(self, agent, history):
-        """Check if the agent should terminate."""
-        return "no action needed" in history[-1].content.lower()
+   # Build sequential orchestration
+   workflow = SequentialBuilder().participants([summarizer, classifier, action]).build()
     ```
 
-    El kernel invoca esta función después de la respuesta del agente para determinar si se cumplen los criterios de finalización. En este caso, el objetivo se cumple cuando el administrador de incidentes responde con "No action needed". Esta frase está definida en las instrucciones del agente del administrador de incidentes.
+    Los agentes procesarán los comentarios en el orden en que se agregan a la orquestación.
 
-### Implementación del chat grupal
-
-Ahora que tienes dos agentes y estrategias para ayudarles a tomar turnos y finalizar un chat, puedes implementar el chat grupal.
-
-1. Haz una copia de seguridad en la función principal, busca el comentario **Add the agents to a group chat with a custom termination and selection strategy** y añade el código siguiente para crear el chat grupal:
+1. Agregue el código siguiente en el comentario **Ejecutar y recopilar salidas**:
 
     ```python
-   # Add the agents to a group chat with a custom termination and selection strategy
-   chat = AgentGroupChat(
-        agents=[agent_incident, agent_devops],
-        termination_strategy=ApprovalTerminationStrategy(
-            agents=[agent_incident], 
-            maximum_iterations=10, 
-            automatic_reset=True
-        ),
-        selection_strategy=SelectionStrategy(agents=[agent_incident,agent_devops]),      
-   )
+   # Run and collect outputs
+   outputs: list[list[ChatMessage]] = []
+   async for event in workflow.run_stream(f"Customer feedback: {feedback}"):
+       if isinstance(event, WorkflowOutputEvent):
+           outputs.append(cast(list[ChatMessage], event.data))
     ```
 
-    En este código, crearás un objeto de chat de grupo de agentes con el administrador de incidentes y los agentes de DevOps. También defines las estrategias de terminación y selección para el chat. Ten en cuenta que **ApprovalTerminationStrategy** solo está vinculado al agente del administrador de incidentes y no al agente de DevOps. Esto hace que el agente del administrador de incidentes sea responsable de indicar el final del chat. **SelectionStrategy** incluye todos los agentes que deben tomar un turno en el chat.
+    Este código ejecuta la orquestación y recopila la salida de cada uno de los agentes participantes.
 
-    Ten en cuenta que la marca de restablecimiento automático borrará automáticamente el chat cuando finalice. De este modo, el agente puede seguir analizando los archivos sin el objeto de historial de chats con demasiados tokens innecesarios. 
-
-1. Busca el comentario **Append the current log file to the chat** y añade el código siguiente para agregar el texto del archivo de registro de lectura más reciente al chat:
+1. Agregue el código siguiente en el comentario **Mostrar salidas**:
 
     ```python
-   # Append the current log file to the chat
-   await chat.add_chat_message(logfile_msg)
-   print()
+   # Display outputs
+   if outputs:
+       for i, msg in enumerate(outputs[-1], start=1):
+           name = msg.author_name or ("assistant" if msg.role == Role.ASSISTANT else "user")
+           print(f"{'-' * 60}\n{i:02d} [{name}]\n{msg.text}")
     ```
 
-1. Busca el comentario **Invoke a response from the agents** y añade el código siguiente para invocar el chat grupal:
-
-    ```python
-   # Invoke a response from the agents
-   async for response in chat.invoke():
-        if response is None or not response.name:
-            continue
-        print(f"{response.content}")
-    ```
-
-    Este es el código que desencadena el chat. Dado que el texto del archivo de registro se ha agregado como un mensaje, la estrategia de selección determinará qué agente debe leer y responder y, a continuación, la conversación continuará entre los agentes hasta que se cumplan las condiciones de la estrategia de terminación o se alcance el número máximo de iteraciones.
+    Este código da formato y muestra los mensajes de las salidas de flujo de trabajo recopiladas de la orquestación.
 
 1. Usa el comando **CTRL+S** para guardar los cambios en el archivo de código. Puedes mantenerlo abierto (en caso de que tengas que editar el código para corregir los errores) o usar el comando **CTRL+Q** para cerrar el editor de código mientras mantienes abierta la línea de comandos de Cloud Shell.
 
@@ -291,41 +232,42 @@ Ahora estás listo para ejecutar el código y ver cómo colaboran tus agentes de
 1. Después de iniciar sesión, escribe el siguiente comando para ejecutar la aplicación:
 
     ```
-   python agent_chat.py
+   python agents.py
     ```
 
     Deberías ver un resultado parecido a los siguiente:
 
     ```output
-    
-    INCIDENT_MANAGER > /home/.../logs/log1.log | Restart service ServiceX
-    DEVOPS_ASSISTANT > Service ServiceX restarted successfully.
-    INCIDENT_MANAGER > No action needed.
+    ------------------------------------------------------------
+    01 [user]
+    Customer feedback:
+        I use the dashboard every day to monitor metrics, and it works well overall.
+        But when I'm working late at night, the bright screen is really harsh on my eyes.
+        If you added a dark mode option, it would make the experience much more comfortable.
 
-    INCIDENT_MANAGER > /home/.../logs/log2.log | Rollback transaction for transaction ID 987654.
-    DEVOPS_ASSISTANT > Transaction rolled back successfully.
-    INCIDENT_MANAGER > No action needed.
-
-    INCIDENT_MANAGER > /home/.../logs/log3.log | Increase quota.
-    DEVOPS_ASSISTANT > Successfully increased quota.
-    (continued)
+    ------------------------------------------------------------
+    02 [summarizer]
+    User requests a dark mode for better nighttime usability.
+    ------------------------------------------------------------
+    03 [classifier]
+    Feature request
+    ------------------------------------------------------------
+    04 [action]
+    Log as enhancement request for product backlog.
     ```
 
-    > **Nota**: La aplicación incluye código para esperar tras el procesamiento de cada archivo de registro e intentar reducir el riesgo de que se supere el límite de velocidad del TPM y el control de excepciones en caso de que se produzca de todos modos. Si no hay cuota suficiente disponible en la suscripción, es posible que el modelo no pueda responder.
+1. Opcionalmente, puede intentar ejecutar el código mediante diferentes entradas de comentarios, como:
 
-1. Comprueba que los archivos de registro de la carpeta **logs** se actualicen con mensajes de operación de resolución de DevopsAssistant.
-
-    Por ejemplo, log1.log debe tener anexados los siguientes mensajes de registro:
-
-    ```log
-    [2025-02-27 12:43:38] ALERT  DevopsAssistant: Multiple failures detected in ServiceX. Restarting service.
-    [2025-02-27 12:43:38] INFO  ServiceX: Restart initiated.
-    [2025-02-27 12:43:38] INFO  ServiceX: Service restarted successfully.
+    ```output
+    I use the dashboard every day to monitor metrics, and it works well overall. But when I'm working late at night, the bright screen is really harsh on my eyes. If you added a dark mode option, it would make the experience much more comfortable.
+    ```
+    ```output
+    I reached out to your customer support yesterday because I couldn't access my account. The representative responded almost immediately, was polite and professional, and fixed the issue within minutes. Honestly, it was one of the best support experiences I've ever had.
     ```
 
 ## Resumen
 
-En este ejercicio, has usado el Agente de servicio de IA de Azure y el SDK de kernel semántico para crear agentes de incidentes y DevOps de IA que pueden detectar automáticamente problemas y aplicar soluciones. ¡Excelente trabajo!
+En este ejercicio, ha practicado la orquestación secuencial con el SDK de Microsoft Agent Framework, combinando varios agentes en un único flujo de trabajo simplificado. ¡Excelente trabajo!
 
 ## Limpieza
 
