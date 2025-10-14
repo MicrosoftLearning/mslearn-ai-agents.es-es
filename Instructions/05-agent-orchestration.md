@@ -141,6 +141,8 @@ Ahora ya estás listo para crear los agentes para la solución de varios agentes
    ):
     ```
 
+    Tenga en cuenta que el objeto **AzureCliCredential** permitirá que el código se autentique en su cuenta de Azure. El objeto **AzureAIAgentClient** incluirá automáticamente la configuración del proyecto de Fundición de IA de Azure desde la configuración de .env.
+
 1. Agregue el código siguiente en el comentario **Crear agentes**:
 
     (Asegúrate de mantener el nivel de sangría)
