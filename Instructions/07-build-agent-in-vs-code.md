@@ -68,7 +68,7 @@ Necesitará un modelo implementado para usarlo con el agente.
 
 1. En el catálogo de modelos, busque el modelo **gpt-4o** (puede usar la barra de búsqueda para encontrarlo rápidamente).
 
-    ![Recorte de pantalla del catálogo de modelos de la extensión de VS Code de Fundición de IA de Azure.](media/vs-code-model.png)
+    ![Recorte de pantalla del catálogo de modelos de la extensión de VS Code de Fundición de IA de Azure.](Media/vs-code-model.png)
 
 1. Seleccione **Implementar en Azure** junto al modelo gpt-4o.
 
@@ -92,7 +92,7 @@ Ahora creará un agente de IA mediante la interfaz del diseñador visual.
 
 1. Seleccione el icono (más) **+** situado junto a la subsección **Agentes** para crear un nuevo agente de IA.
 
-    ![Recorte de pantalla de la creación de un agente en la extensión de VS Code de Fundición de IA de Azure.](media/vs-code-new-agent.png)
+    ![Recorte de pantalla de la creación de un agente en la extensión de VS Code de Fundición de IA de Azure.](Media/vs-code-new-agent.png)
 
 1. Ciando se le solicite, elija una ubicación para guardar los archivos del agente.
 
@@ -117,7 +117,7 @@ Ahora agregará una herramienta de servidor del Protocolo de contexto de modelo 
 
 1. En la sección **HERRAMIENTA** del diseñador, seleccione el botón **Agregar herramienta** en la esquina superior derecha.
 
-![Recorte de pantalla de la adición de una herramienta a un agente en la extensión de VS Code de Fundición de IA de Azure.](media/vs-code-agent-tools.png)
+![Recorte de pantalla de la adición de una herramienta a un agente en la extensión de VS Code de Fundición de IA de Azure.](Media/vs-code-agent-tools.png)
 
 1. En el menú desplegable, elija **Servidor MCP**.
 
