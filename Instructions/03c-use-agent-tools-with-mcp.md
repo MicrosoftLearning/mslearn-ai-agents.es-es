@@ -199,6 +199,15 @@ En esta tarea, se conectará a un servidor MCP remoto, preparará el agente de I
    print(f"Created message, ID: {message.id}")
     ```
 
+1. Busque el comentario **Establecer modo de aprobación** y agregue el código siguiente:
+
+    ```python
+    # Set approval mode
+    mcp_tool.set_approval_mode("never")
+    ```
+
+    Esto permite que el agente invoque automáticamente las herramientas de MCP sin necesidad de aprobación del usuario. Si desea requerir aprobación, debe proporcionar un valor de encabezado mediante `mcp_tool.update_headers`.
+
 1. Busque el comentario **Crear y procesar la ejecución del agente en el subproceso con herramientas de MCP** y agregue el código siguiente:
 
     ```python

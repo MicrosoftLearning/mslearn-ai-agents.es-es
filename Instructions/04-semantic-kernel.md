@@ -157,7 +157,7 @@ Ahora estás listo para crear una aplicación cliente que defina un agente y una
    ):
     ```
 
-    Tenga en cuenta que el objeto **AzureCliCredential** incluirá automáticamente las opciones del proyecto de la Fundición de IA de Azure de la configuración.
+    Tenga en cuenta que el objeto **AzureCliCredential** permitirá que el código se autentique en su cuenta de Azure. El objeto **AzureAIAgentClient** incluirá automáticamente la configuración del proyecto de Fundición de IA de Azure desde la configuración de .env.
 
 1. Busca el comentario **Usar el agente para procesar los datos de gastos**, y agrega el siguiente código para crear un subproceso en el que se ejecutará tu agente y después invocarlo con un mensaje de chat.
 
