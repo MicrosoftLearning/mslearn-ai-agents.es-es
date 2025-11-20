@@ -94,7 +94,7 @@ Ahora que has creado el proyecto en Fundición de IA, vamos a desarrollar una ap
     ```
    python -m venv labenv
    ./labenv/bin/Activate.ps1
-   pip install -r requirements.txt --pre azure-ai-projects mcp
+   pip install -r requirements.txt --pre azure-ai-projects azure-ai-agents mcp
     ```
 
     >**Nota:** puedes ignorar los mensajes de error o advertencia que se muestran durante la instalación de la biblioteca.
