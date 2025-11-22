@@ -1,12 +1,12 @@
 ---
 lab:
   title: "Desarrollo de un agente de IA con la extensión de VS\_Code"
-  description: Use la extensión de VS Code de Fundición de IA de Azure para crear un agente de IA.
+  description: "Use la extensión Microsoft Foundry para VS\_Code para crear un agente de IA."
 ---
 
 # Desarrollo de un agente de IA con la extensión de VS Code
 
-En este ejercicio, usará la extensión de VS Code de Fundición de IA de Azure para crear un agente que pueda usar herramientas de servidor del Protocolo de contexto de modelo (MCP) para acceder a orígenes de datos externos y API. El agente podrá recuperar información actualizada e interactuar con varios servicios a través de herramientas de MCP.
+En este ejercicio, usará la extensión Microsoft Foundry para VS Code crear un agente que pueda usar herramientas de servidor del Protocolo de contexto de modelo (MCP) para acceder a APY y orígenes de datos externos. El agente podrá recuperar información actualizada e interactuar con varios servicios a través de herramientas de MCP.
 
 Este ejercicio debería tardar en completarse **30** minutos aproximadamente.
 
@@ -18,7 +18,7 @@ Antes de iniciar este ejercicio, compruebe lo siguiente:
 - Visual Studio Code instalado
 - Una suscripción a Azure activa
 
-## Ha instalado la extensión de VS Code de Fundición de IA de Azure.
+## Instalación de la extensión Foundry para VS Code
 
 Comencemos instalando y configurando la extensión de VS Code.
 
@@ -26,9 +26,9 @@ Comencemos instalando y configurando la extensión de VS Code.
 
 1. Seleccione **Extensiones** en el panel izquierdo (o presione **Ctrl+Mayús+X**).
 
-1. En la barra de búsqueda, escriba **Fundición de IA de Azure** y presione Entrar.
+1. En la barra de búsqueda, escriba **Foundry** y presione Entrar.
 
-1. Seleccione la extensión **Fundición de IA de Azure** de Microsoft y haga clic en **Instalar**.
+1. Seleccione la extensión **Foundry** de Microsoft y haga clic en **Instalar**.
 
 1. Una vez completada la instalación, compruebe que la extensión aparece en la barra de navegación principal del lado izquierdo de Visual Studio Code.
 
@@ -36,13 +36,13 @@ Comencemos instalando y configurando la extensión de VS Code.
 
 Ahora se conectará a los recursos de Azure y creará un nuevo proyecto de Fundición de IA.
 
-1. En la barra lateral de VS Code, seleccione el icono de la extensión de **Fundición de IA de Azure**.
+1. En la barra lateral de VS Code, seleccione el icono de la extensión **Foundry**.
 
 1. En la vista de recursos de Azure, seleccione **Iniciar sesión en Azure...** y siga los mensajes de autenticación.
 
 1. Después de iniciar sesión, seleccione la suscripción de Azure en la lista desplegable.
 
-1. Cree un nuevo proyecto de Fundición de IA de Azure; para ello, seleccione el icono (más)**+** situado junto a **Recursos** en la vista de la extensión de Fundición de IA de Azure.
+1. Cree un nuevo proyecto de Foundry seleccionando el icono (más) **+** situado junto a **Recursos** en la vista Extensión de Foundry.
 
 1. Elija si desea crear un nuevo grupo de recursos o usar uno existente:
    
@@ -54,7 +54,7 @@ Ahora se conectará a los recursos de Azure y creará un nuevo proyecto de Fundi
    **Para usar un grupo de recursos existente:**
    - seleccione el grupo de recursos que desea usar en la lista y presione Entrar.
 
-1. Escriba un nombre para el proyecto de Fundición de IA de Azure (por ejemplo, "ai-agents-project") en el cuadro de texto y presione Entrar.
+1. Escriba un nombre para el proyecto de Foundry (por ejemplo, "ai-agents-project") en el cuadro de texto y presione Entrar.
 
 1. Espere a que se complete la implementación del proyecto. Aparecerá un mensaje emergente que dice "El proyecto se implementó correctamente".
 
@@ -64,11 +64,11 @@ Necesitará un modelo implementado para usarlo con el agente.
 
 1. Cuando aparezca el mensaje emergente "El proyecto se ha implementado correctamente", seleccione el botón **Implementar un modelo**. Se abrirá el catálogo de modelos.
 
-   > **Sugerencia**: También puede acceder al catálogo de modelos seleccionando el icono **+** situado junto a **Modelos** en la sección Recursos, o presionando **F1** y ejecutando el comando **Fundición de IA de Azure: Abra el catálogo de modelos**.
+   > **Sugerencia**: También puede acceder al catálogo de modelos seleccionando el icono **+** situado junto a **Modelos** en la sección Recursos, o presionando **F1** y ejecutando el comando **Foundry: Abra el catálogo de modelos**.
 
 1. En el catálogo de modelos, busque el modelo **gpt-4o** (puede usar la barra de búsqueda para encontrarlo rápidamente).
 
-    ![Recorte de pantalla del catálogo de modelos de la extensión de VS Code de Fundición de IA de Azure.](Media/vs-code-model.png)
+    ![Recorte de pantalla del catálogo de modelos en la extensión Foundry para VS Code.](Media/vs-code-model.png)
 
 1. Seleccione **Implementar en Azure** junto al modelo gpt-4o.
 
@@ -78,7 +78,7 @@ Necesitará un modelo implementado para usarlo con el agente.
    - **Versión del modelo**: deje el valor predeterminado.
    - **Tokens por minuto**: deje el valor predeterminado.
 
-1. Seleccione **Implementar en Fundición de IA de Azure** en la esquina inferior izquierda.
+1. Seleccione **Implementar en Foundry** en la esquina inferior izquierda.
 
 1. En el cuadro de diálogo de confirmación, seleccione **Implementar** para implementar el modelo.
 
@@ -88,11 +88,11 @@ Necesitará un modelo implementado para usarlo con el agente.
 
 Ahora creará un agente de IA mediante la interfaz del diseñador visual.
 
-1. En la vista de la extensión de Fundición de IA de Azure, busque la sección **Recursos**.
+1. En la vista de la extensión de Foundry, busque la sección **Recursos**.
 
 1. Seleccione el icono (más) **+** situado junto a la subsección **Agentes** para crear un nuevo agente de IA.
 
-    ![Recorte de pantalla de la creación de un agente en la extensión de VS Code de Fundición de IA de Azure.](Media/vs-code-new-agent.png)
+    ![Recorte de pantalla de la creación de un agente en la extensión Foundry para VS Code.](Media/vs-code-new-agent.png)
 
 1. Ciando se le solicite, elija una ubicación para guardar los archivos del agente.
 
@@ -117,7 +117,7 @@ Ahora agregará una herramienta de servidor del Protocolo de contexto de modelo 
 
 1. En la sección **HERRAMIENTA** del diseñador, seleccione el botón **Agregar herramienta** en la esquina superior derecha.
 
-![Recorte de pantalla de la adición de una herramienta a un agente en la extensión de VS Code de Fundición de IA de Azure.](Media/vs-code-agent-tools.png)
+![Recorte de pantalla de cómo agregar una herramienta a un agente en la extensión Foundry para VS Code.](Media/vs-code-agent-tools.png)
 
 1. En el menú desplegable, elija **Servidor MCP**.
 
@@ -129,9 +129,9 @@ Ahora agregará una herramienta de servidor del Protocolo de contexto de modelo 
 
 1. Seleccione el botón **Crear herramienta** para agregar la herramienta al agente.
 
-## Implementación del agente en Fundición de IA de Azure
+## Implementación del agente en Foundry
 
-1. En la vista del diseñador, seleccione el botón **Crear en Fundición de IA de Azure** en la esquina inferior izquierda.
+1. En la vista del diseñador, seleccione el botón **Crear en Foundry** en la esquina inferior izquierda.
 
 1. Espere a que la implementación se complete.
 
@@ -186,15 +186,15 @@ Puede usar este código como punto de partida para compilar aplicaciones que use
 
 ## Resumen
 
-En este ejercicio, ha usado la extensión de VS Code de Fundición de IA de Azure para crear un agente de IA con herramientas de servidor MCP. El agente puede acceder a orígenes de datos externos y API a través del Protocolo de contexto de modelo, lo que le permite proporcionar información actualizada e interactuar con varios servicios. También ha aprendido a probar el agente en el área de juegos y a generar código de ejemplo para la interacción mediante programación.
+En este ejercicio, ha usado la extensión Foundry para VS Code para crear un agente de IA con herramientas de servidor MCP. El agente puede acceder a orígenes de datos externos y API a través del Protocolo de contexto de modelo, lo que le permite proporcionar información actualizada e interactuar con varios servicios. También ha aprendido a probar el agente en el área de juegos y a generar código de ejemplo para la interacción mediante programación.
 
 ## Limpieza
 
-Cuando haya terminado de explorar la extensión de VS Code de Fundición de IA de Azure, debe limpiar los recursos para evitar incurrir en costos innecesarios de Azure.
+Cuando haya terminado de explorar la extensión Foundry para VS Code, debe limpiar los recursos para evitar incurrir en costos innecesarios de Azure.
 
 ### Eliminación de los agentes
 
-1. En el Portal de la Fundición de IA de Azure, seleccione **Agentes** en el menú de navegación.
+1. En el portal de Foundry, seleccione **Agentes** en el menú de navegación.
 
 1. Seleccione el agente y, a continuación, seleccione el botón **Eliminar**.
 

@@ -8,24 +8,26 @@ lab:
 
 En este ejercicio, usará el servicio Agente de Azure AI con el protocolo A2A para crear agentes remotos sencillos que interactúen entre sí. Estos agentes ayudarán a los escritores técnicos a preparar sus entradas de blog para desarrolladores. Un agente de título generará un titular y un agente de esquema usará el título para desarrollar un esquema conciso para el artículo. Comencemos.
 
-> **Sugerencia**: El código usado en este ejercicio se basa en el SDK de Fundición de IA de Azure para Python. Puedes desarrollar soluciones similares mediante los SDK de Microsoft .NET, JavaScript y Java. Consulta las [bibliotecas cliente de SDK de la Fundición de IA de Azure](https://learn.microsoft.com/azure/ai-foundry/how-to/develop/sdk-overview) para más información.
+> **Sugerencia**: El código usado en este ejercicio se basa en el SDK de Microsoft Foundry para Python. Puedes desarrollar soluciones similares mediante los SDK de Microsoft .NET, JavaScript y Java. Consulte las [bibliotecas cliente del SDK de Microsoft Foundry](https://learn.microsoft.com/azure/ai-foundry/how-to/develop/sdk-overview) para obtener más información.
 
 Este ejercicio debería tardar en completarse **30** minutos aproximadamente.
 
 > **Nota**: algunas de las tecnologías que se usan en este ejercicio se encuentran en versión preliminar o en desarrollo activo. Puede que se produzcan algunos comportamientos, advertencias o errores inesperados.
 
-## Creación de un proyecto de Fundición de IA de Azure
+## Creación de un proyecto de Foundry
 
-Comencemos creando un proyecto de Fundición de IA de Azure.
+Comencemos creando un proyecto de Foundry.
 
-1. En un explorador web, abre el [Portal de la Fundición de IA de Azure](https://ai.azure.com) en `https://ai.azure.com` e inicia sesión con tus credenciales de Azure. Cierra las sugerencias o paneles de inicio rápido que se abran la primera vez que inicias sesión y, si es necesario, usa el logotipo de **Fundición de IA de Azure** en la parte superior izquierda para navegar a la página principal, que es similar a la siguiente imagen (cierra el panel **Ayuda** si está abierto):
+1. En un explorador web, abra el [portal de Foundry](https://ai.azure.com) en `https://ai.azure.com` e inicie sesión con sus credenciales de Azure. Cierre todas las sugerencias o paneles de inicio rápido que se abrieron la primera vez que inició sesión y, si es necesario, use el logotipo de **Foundry** situado en la parte superior izquierda para ir a la página principal, que es similar a la siguiente imagen (cierre el panel **Ayuda** si está abierto):
 
-    ![Captura de pantalla del Portal de la Fundición de IA de Azure.](./Media/ai-foundry-home.png)
+    ![Recorte de pantalla del portal de Foundry.](./Media/ai-foundry-home.png)
+
+    > **Importante**: Asegúrese de que el botón de alternancia **Nueva fundición** está *desactivado* para este laboratorio.
 
 1. En la página principal, selecciona **Crear un agente**.
 1. Cuando se te pida que crees un proyecto, escribe un nombre válido para el proyecto y expande **Opciones avanzadas**.
 1. Confirma los siguientes ajustes para tu proyecto:
-    - **Recurso de Fundición de IA de Azure**: *un nombre válido para el recurso de Fundición de IA de Azure*
+    - **Recurso de Foundry**: *un nombre válido para el recurso de Foundry*
     - **Suscripción**: *suscripción a Azure*
     - **Grupo de recursos**: *crea o selecciona un grupo de recursos*
     - **Región**: *seleccione cualquiera (se recomienda Fundición de IA\*).
@@ -41,9 +43,9 @@ Comencemos creando un proyecto de Fundición de IA de Azure.
 
 1. En el panel de navegación de la izquierda, selecciona **Información general** para ver la página principal del proyecto; que tiene este aspecto:
 
-    ![Captura de pantalla de la página de información general de un proyecto de Fundición de IA de Azure.](./Media/ai-foundry-project.png)
+    ![Recorte de pantalla de una página de información general del proyecto de Foundry.](./Media/ai-foundry-project.png)
 
-1. Copia los valores del **punto de conexión del proyecto de Fundición de IA de Azure** en un Bloc de notas, ya que los usarás para conectarte a tu proyecto en una aplicación cliente.
+1. Copie los valores del **punto de conexión del proyecto de Foundry** en un bloc de notas, ya que los usará para conectarse al proyecto en una aplicación cliente.
 
 ## Creación de aplicación de A2A
 
@@ -51,7 +53,7 @@ Ahora estás listo para crear una aplicación cliente que use un agente. Parte d
 
 ### Clonación del repositorio que contiene el código de la aplicación
 
-1. Abre una nueva pestaña del explorador (mantén el Portal de la Fundición de IA de Azure abierto en la pestaña existente). En la nueva pestaña, explora [Azure Portal](https://portal.azure.com) en `https://portal.azure.com` e inicia sesión con tus credenciales de Azure, si se te solicita.
+1. Abra una nueva pestaña del explorador (pero mantenga abierto el portal de Foundry en la pestaña existente). En la nueva pestaña, explora [Azure Portal](https://portal.azure.com) en `https://portal.azure.com` e inicia sesión con tus credenciales de Azure, si se te solicita.
 
     Cierra las notificaciones de bienvenida para ver la página principal de Azure Portal.
 
@@ -119,7 +121,7 @@ Ahora estás listo para crear una aplicación cliente que use un agente. Parte d
 
     El archivo se abre en un editor de código.
 
-1. En el archivo de código, reemplaza el marcador de posición **your_project_endpoint** con el punto de conexión del proyecto (copiado de la página **Información general** del proyecto en el portal de la Función de IA de Azure) y asegúrate de que la variable MODEL_DEPLOYMENT_NAME está configurada con el nombre de la implementación de tu modelo (debe ser *gpt-4o*).
+1. En el archivo de código, reemplace el marcador de posición **your_project_endpoint** por el punto de conexión del proyecto (copiado de la página **Información general** del proyecto en el portal de Foundry) y asegúrese de que la variable MODEL_DEPLOYMENT_NAME esté establecida en el nombre de la implementación del modelo (que debe ser *gpt-4o*).
 1. Después de reemplazar los marcadores de posición, usa el comando **CTRL+S** para guardar los cambios y después usa el comando **CTRL+Q** para cerrar el editor de código mientras mantienes abierta la línea de comandos de Cloud Shell.
 
 ### Creación de un agente reconocible
@@ -223,7 +225,7 @@ En esta tarea, creará el agente de título que ayuda a los escritores a crear t
    # Create agent card
    agent_card = AgentCard(
        name='AI Foundry Title Agent',
-       description='An intelligent title generator agent powered by Azure AI Foundry. '
+       description='An intelligent title generator agent powered by Foundry. '
        'I can help you generate catchy titles for your articles.',
        url=f'http://{host}:{port}/',
        version='1.0.0',
@@ -410,7 +412,7 @@ En esta tarea, se usa el protocolo A2A para permitir que el agente de enrutamien
 
     > **Nota**: en la mayoría de los escenarios, el uso de *inicio de sesión de az* será suficiente. Sin embargo, si tienes suscripciones en varios inquilinos, es posible que tengas que especificar el inquilino mediante el parámetro *--tenant*. Consulta [Inicio de sesión en Azure de forma interactiva mediante la CLI de Azure](https://learn.microsoft.com/cli/azure/authenticate-azure-cli-interactively) para obtener más información.
     
-1. Cuando se te solicite, sigue las instrucciones para abrir la página de inicio de sesión en una nueva pestaña y escribe el código de autenticación proporcionado y las credenciales de Azure. A continuación, completa el proceso de inicio de sesión en la línea de comandos y selecciona la suscripción que contiene el centro de Fundición de IA de Azure si se te solicita.
+1. Cuando se te solicite, sigue las instrucciones para abrir la página de inicio de sesión en una nueva pestaña y escribe el código de autenticación proporcionado y las credenciales de Azure. A continuación, complete el proceso de inicio de sesión en la línea de comandos y, si se le solicita, seleccione la suscripción que contiene el centro de Foundry.
 1. Después de iniciar sesión, escribe el siguiente comando para ejecutar la aplicación:
 
     ```

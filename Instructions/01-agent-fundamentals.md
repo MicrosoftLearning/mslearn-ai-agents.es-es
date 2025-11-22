@@ -1,29 +1,31 @@
 ---
 lab:
   title: Exploración del desarrollo del agente de IA
-  description: Sigue los primeros pasos para desarrollar agentes de IA mientras exploras el Agente de servicio de IA de Azure en el Portal de la Fundición de IA de Azure.
+  description: Siga los primeros pasos para desarrollar agentes de IA mediante la exploración del servicio Agente de Azure AI en el portal de Microsoft Foundry.
 ---
 
 # Exploración del desarrollo del agente de IA
 
-En este ejercicio, usarás el Agente de servicio de IA de Azure en el Portal de la Fundición de IA de Azure para crear un agente de IA sencillo que ayude a los empleados con las reclamaciones de gastos.
+En este ejercicio, usará el servicio Agente de Azure AI en el portal de Microsoft Foundry para crear un agente de IA sencillo que ayude a los empleados con las reclamaciones de gastos.
 
 Este ejercicio dura aproximadamente **30** minutos.
 
 > **Nota**: Algunas de las tecnologías que se usan en este ejercicio se encuentran en versión preliminar o en desarrollo activo. Puede que se produzcan algunos comportamientos, advertencias o errores inesperados.
 
-## Crear un proyecto y un agente de la Fundición de IA de Azure
+## Creación de un proyecto y un agente de Foundry
 
-Comencemos creando un proyecto de Fundición de IA de Azure.
+Comencemos creando un proyecto de Foundry.
 
-1. En un explorador web, abre el [Portal de la Fundición de IA de Azure](https://ai.azure.com) en `https://ai.azure.com` e inicia sesión con tus credenciales de Azure. Cierra las sugerencias o paneles de inicio rápido que se abran la primera vez que inicias sesión y, si es necesario, usa el logotipo de **Fundición de IA de Azure** en la parte superior izquierda para navegar a la página principal, que es similar a la siguiente imagen (cierra el panel **Ayuda** si está abierto):
+1. En un explorador web, abra el [portal de Foundry](https://ai.azure.com) en `https://ai.azure.com` e inicie sesión con sus credenciales de Azure. Cierre todas las sugerencias o paneles de inicio rápido que se abrieron la primera vez que inició sesión y, si es necesario, use el logotipo de **Foundry** situado en la parte superior izquierda para ir a la página principal, que es similar a la siguiente imagen (cierre el panel **Ayuda** si está abierto):
 
-    ![Captura de pantalla del Portal de la Fundición de IA de Azure.](./Media/ai-foundry-home.png)
+    ![Recorte de pantalla del portal de Foundry.](./Media/ai-foundry-home.png)
+
+    > **Importante**: Asegúrese de que el botón de alternancia **Nueva fundición** está *desactivado* para este laboratorio.
 
 1. En la página principal, selecciona **Crear un agente**.
 1. Cuando se te pida que crees un proyecto, escribe un nombre válido para tu proyecto.
 1. Expande **Opciones avanzadas** y especifica los siguientes valores:
-    - **Recurso de Fundición de IA de Azure**: *un nombre válido para el recurso de Fundición de IA de Azure*
+    - **Recurso de Foundry**: *un nombre válido para el recurso de Foundry*
     - **Suscripción**: *suscripción a Azure*
     - **Grupo de recursos**: *selecciona tu grupo de recursos o crea uno nuevo*
     - **Región**: seleccione cualquiera *(se recomienda Fundición de IA)\**.
@@ -37,7 +39,7 @@ Comencemos creando un proyecto de Fundición de IA de Azure.
 
 1. Cuando se cree el proyecto, el área de juegos de agentes se abrirá automáticamente para que puedas seleccionar o implementar un modelo:
 
-    ![Captura de pantalla del área de juegos de agentes en Fundición de IA de Azure.](./Media/ai-foundry-agents-playground.png)
+    ![Recorte de pantalla de un área de juegos de agentes de proyecto de Foundry.](./Media/ai-foundry-agents-playground.png)
 
     >**Nota**: Un modelo base GPT-4o se implementa automáticamente al crear el agente y el proyecto.
 
@@ -57,7 +59,7 @@ Ahora que has implementado un modelo, estás listo para crear un agente de IA. E
    If a user wants to submit an expense claim, you get their email address, a description of the claim, and the amount to be claimed and write the claim details to a text file that the user can download.
     ```
 
-    ![Captura de pantalla de la página de configuración del agente de IA del Portal de la Fundición de IA de Azure.](./Media/ai-agent-setup.png)
+    ![Recorte de pantalla de la página de configuración del agente de IA en el portal de Foundry.](./Media/ai-agent-setup.png)
 
 1. Más abajo, en el panel **Configuración**, junto al encabezado **Conocimientos**, selecciona **+ Agregar**. A continuación, en el cuadro de diálogo **Agregar conocimientos**, selecciona **Archivos**.
 1. En el cuadro de diálogo **Agregar archivos**, crea un nuevo almacén de vectores denominado `Expenses_Vector_Store`, cargando y guardando el archivo local **Expenses_policy.docx** que descargaste anteriormente.
@@ -79,7 +81,7 @@ Ahora que has creado un agente, puedes probarlo en el chat del área de juegos.
 1. Envía un mensaje que describa la notificación y el importe; por ejemplo, `Breakfast cost me $20`.
 1. El agente debe usar el intérprete de código para preparar el archivo de texto de notificación de gastos y proporcionar un vínculo para que puedas descargarlo.
 
-    ![Captura de pantalla del área de juegos del agente en el Portal de la Fundición de IA de Azure.](./Media/ai-agent-playground.png)
+    ![Recorte de pantalla del área de juegos del agente en el portal de Foundry.](./Media/ai-agent-playground.png)
 
 1. Descarga y abre el documento de texto para ver los detalles de la notificación de gastos.
 
