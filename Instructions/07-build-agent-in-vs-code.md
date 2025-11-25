@@ -18,7 +18,7 @@ Antes de iniciar este ejercicio, compruebe lo siguiente:
 - Visual Studio Code instalado
 - Una suscripción a Azure activa
 
-## Instalación de la extensión Foundry para VS Code
+## Instalación de la extensión de VS Code de Microsoft Foundry
 
 Comencemos instalando y configurando la extensión de VS Code.
 
@@ -26,9 +26,9 @@ Comencemos instalando y configurando la extensión de VS Code.
 
 1. Seleccione **Extensiones** en el panel izquierdo (o presione **Ctrl+Mayús+X**).
 
-1. En la barra de búsqueda, escriba **Foundry** y presione Entrar.
+1. En la barra de búsqueda, escriba **Microsoft Foundry** y presione Entrar.
 
-1. Seleccione la extensión **Foundry** de Microsoft y haga clic en **Instalar**.
+1. Seleccione la extensión **Microsoft Foundry** de Microsoft y haga clic en **Instalar**.
 
 1. Una vez completada la instalación, compruebe que la extensión aparece en la barra de navegación principal del lado izquierdo de Visual Studio Code.
 
@@ -36,13 +36,15 @@ Comencemos instalando y configurando la extensión de VS Code.
 
 Ahora se conectará a los recursos de Azure y creará un nuevo proyecto de Fundición de IA.
 
-1. En la barra lateral de VS Code, seleccione el icono de la extensión **Foundry**.
+1. En la barra lateral de VS Code, seleccione el icono de la extensión **Microsoft Foundry**.
 
-1. En la vista de recursos de Azure, seleccione **Iniciar sesión en Azure...** y siga los mensajes de autenticación.
+1. En la vista de recursos, seleccione **Iniciar sesión en Azure...** y siga los mensajes de autenticación.
 
-1. Después de iniciar sesión, seleccione la suscripción de Azure en la lista desplegable.
+   > **Nota**: No verá esta opción si ya ha iniciado sesión.
 
 1. Cree un nuevo proyecto de Foundry seleccionando el icono (más) **+** situado junto a **Recursos** en la vista Extensión de Foundry.
+
+1. Seleccione su suscripción de Azureen la lista desplegable.
 
 1. Elija si desea crear un nuevo grupo de recursos o usar uno existente:
    
@@ -64,21 +66,21 @@ Necesitará un modelo implementado para usarlo con el agente.
 
 1. Cuando aparezca el mensaje emergente "El proyecto se ha implementado correctamente", seleccione el botón **Implementar un modelo**. Se abrirá el catálogo de modelos.
 
-   > **Sugerencia**: También puede acceder al catálogo de modelos seleccionando el icono **+** situado junto a **Modelos** en la sección Recursos, o presionando **F1** y ejecutando el comando **Foundry: Abra el catálogo de modelos**.
+   > **Sugerencia**: También puede acceder al catálogo de modelos seleccionando el icono **+** situado junto a **Modelos** en la sección Recursos, o presionando **F1** y ejecutando el comando **Microsoft Foundry: Abra el catálogo de modelos**.
 
-1. En el catálogo de modelos, busque el modelo **gpt-4o** (puede usar la barra de búsqueda para encontrarlo rápidamente).
+1. En el catálogo de modelos, busque el modelo **gpt-4** (puede usar la barra de búsqueda para encontrarlo rápidamente).
 
     ![Recorte de pantalla del catálogo de modelos en la extensión Foundry para VS Code.](Media/vs-code-model.png)
 
-1. Seleccione **Implementar en Azure** junto al modelo gpt-4o.
+1. Seleccione **Implementar** junto al modelo gpt-4.
 
 1. Configure las opciones de implementación:
-   - **Nombre de implementación**: escriba un nombre como "gpt-4o-deployment".
+   - **Nombre de implementación**: Escriba un nombre como "gpt-4-deployment".
    - **Tipo de implementación**: seleccione **Estándar global** (o **Estándar** si la primera opción no está disponible).
    - **Versión del modelo**: deje el valor predeterminado.
    - **Tokens por minuto**: deje el valor predeterminado.
 
-1. Seleccione **Implementar en Foundry** en la esquina inferior izquierda.
+1. Seleccione **Implementar en Microsoft Foundry** en la esquina inferior izquierda.
 
 1. En el cuadro de diálogo de confirmación, seleccione **Implementar** para implementar el modelo.
 
@@ -86,23 +88,22 @@ Necesitará un modelo implementado para usarlo con el agente.
 
 ## Creación de un agente de IA con la vista del diseñador
 
-Ahora creará un agente de IA mediante la interfaz del diseñador visual.
+Ahora creará un agente de IA mediante la interfaz del diseñador visual. En lugar de escribir código, configurará las instrucciones, la configuración y las herramientas del agente a través de la interfaz de usuario.
 
 1. En la vista de la extensión de Foundry, busque la sección **Recursos**.
 
-1. Seleccione el icono (más) **+** situado junto a la subsección **Agentes** para crear un nuevo agente de IA.
+1. Seleccione el icono (más) **+** situado junto a la subsección **Agentes declarativos** para crear un nuevo agente de IA.
 
-    ![Recorte de pantalla de la creación de un agente en la extensión Foundry para VS Code.](Media/vs-code-new-agent.png)
+    ![Captura de pantalla de la creación de un agente en la extensión Microsoft Foundry para VS Code.](Media/vs-code-new-agent.png)
 
 1. Ciando se le solicite, elija una ubicación para guardar los archivos del agente.
 
-1. La vista del diseñador del agente se abrirá junto con un archivo de configuración `.yaml`.
+1. Se abrirá una pestaña **Nuevo agente** en un editor de "Preferencias del agente", junto con un archivo de configuración `.yaml`.
 
 ### Configuración del agente en el diseñador
 
-1. En el diseñador del agente, configure los siguientes campos:
+1. En las preferencias del agente, configure los campos siguientes:
    - **Nombre**: escriba un nombre descriptivo para el agente (por ejemplo, "data-research-agent").
-   - **Descripción**: agregue una descripción que explique el propósito del agente.
    - **Modelo**: seleccione la implementación de GPT-4o en la lista desplegable.
    - **Instrucciones**: escriba instrucciones del sistema, como:
      ```
@@ -129,17 +130,17 @@ Ahora agregará una herramienta de servidor del Protocolo de contexto de modelo 
 
 1. Seleccione el botón **Crear herramienta** para agregar la herramienta al agente.
 
-## Implementación del agente en Foundry
+## Implementación del agente en Microsoft Foundry
 
-1. En la vista del diseñador, seleccione el botón **Crear en Foundry** en la esquina inferior izquierda.
+1. En la vista del diseñador del agente, seleccione el botón **Crear agente en Microsoft Foundry** en la esquina inferior izquierda.
 
 1. Espere a que la implementación se complete.
 
-1. En la barra de navegación de VS Code, actualice la vista **Recursos de Azure**. El agente implementado debería aparecer ahora en la subsección **Agentes**.
+1. En la barra de navegación de VS Code, actualice la vista **Recursos**. El agente implementado debería aparecer ahora en la subsección **Agentes declarativos**.
 
 ## Prueba del agente en el área de juegos
 
-1. Haga clic con el botón derecho en el agente implementado en la subsección **Agentes**.
+1. Haga clic con el botón derecho en el agente implementado en la subsección **Agentes declarativos**.
 
 1. Seleccione **Abrir área de juegos** en el menú contextual.
 
