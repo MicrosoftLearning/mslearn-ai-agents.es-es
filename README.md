@@ -1,3 +1,5 @@
+**⚠️ This GitHub repo will retire on 30th December 2025.**
+
 # Desarrollo de agentes de IA en Azure
 
 Los ejercicios de este repo se han diseñado para brindarte una experiencia práctica de aprendizaje en la que explorarás las tareas comunes que hacen los desarrolladores al crear agentes de IA en Microsoft Azure.
